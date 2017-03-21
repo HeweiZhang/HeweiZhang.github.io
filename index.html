@@ -147,7 +147,7 @@
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                5
+                6
                 <span>文章</span>
             </div>
             <div class="article-info-block">
@@ -188,6 +188,118 @@
 
             
             <section id="main">
+    <article id="post-RecyclerView-multiple-item-type" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2017/03/21/RecyclerView-multiple-item-type/">RecyclerView multiple item type</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/03/21/RecyclerView-multiple-item-type/">
+            <time datetime="2017-03-21T09:54:39.000Z" itemprop="datePublished">2017-03-21</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/android-widget-study/">android-widget-study</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p><em>项目中需要用到一个高度动态的布局用于录入用户信息，信息类型以及参数字段等全来自后台。因此需要用RecyclerView来动态显示，同时使用Item多布局来对应不同类型的信息录入（log：提前已知所有可能输入的类型），这里记录一下自己的解决方式，以及item中使用EditText碰到的问题（欢迎吐槽，互相交流）</em></p>
+<h5 id="先来看下需要实现的界面效果"><a href="#先来看下需要实现的界面效果" class="headerlink" title="先来看下需要实现的界面效果"></a>先来看下需要实现的界面效果</h5><p><img src="http://upload-images.jianshu.io/upload_images/2510928-478b85ab1c69f700.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="整体布局结构.png">   </p>
+<p>这里可以看到尾巴上一步，下一步布局也通过占用一个item的方式来实现footerView的效果，从图中可以直观的看出当前页面一共有3种布局，其中item_type_1中用到了EditText，item_type_2中使用TextView来展示地址选择结果，item_type_3使用两个TextView来制作按钮。</p>
+<h3 id="一、RecyclerView多布局的使用"><a href="#一、RecyclerView多布局的使用" class="headerlink" title="一、RecyclerView多布局的使用"></a>一、RecyclerView多布局的使用</h3><p>没错，还是老套路，重点一定在Adapter，并且这里会使用到getItemViewType（）方法来指定待显示的item布局。这里为了简单明了，直接使用未封装的 RecyclerView.Adapter。重要代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">//一共5种布局</div><div class="line">private static final int TYPE_EDITTEXT = 1;//editText布局</div><div class="line">private static final int TYPE_EDITADDRESS = 2;//地址选择器布局</div><div class="line">private static final int TYPE_GETCODE = 3;//动态获取数据（信息选择器）</div><div class="line">private static final int TYPE_EDITIDCARD = 4;//身份信息提交布局</div><div class="line">private static final int TYPE_FOOTERVIEW = 5;//底部下一步 布局</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">//通过重写getItemViewType(int position)方法来告诉onCreateViewHolder(...)每个条目对应的布局</div><div class="line">    @Override</div><div class="line">public int getItemViewType(int position) &#123;</div><div class="line">    switch (fieldsList.get(position).getInput_type()) &#123;</div><div class="line">            case 1:</div><div class="line">                return TYPE_EDITTEXT;</div><div class="line">            case 2:</div><div class="line">                return TYPE_EDITADDRESS;</div><div class="line">            case ...</div><div class="line">     &#125;</div><div class="line"></div><div class="line">     return TYPE_FOOTERVIEW;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">//返回不同布局对应的ViewHolder</div><div class="line">    @Override</div><div class="line">    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) &#123;</div><div class="line">        switch (viewType) &#123;</div><div class="line">            case TYPE_EDITTEXT:</div><div class="line">                return new EditTextItemHolder(LayoutInflater.from(context).inflate(R.layout.item_rv_type_edittext, parent, false));</div><div class="line">            case TYPE_EDITADDRESS:</div><div class="line">                return new EditAddRessItemHolder(LayoutInflater.from(context).inflate(R.layout.item_rv_type_editaddress, parent, false));</div><div class="line">            case ...</div><div class="line">        &#125;</div><div class="line">        return new FooterViewHolder(LayoutInflater.from(context).inflate(R.layout.item_rv_type_footview, parent, false));</div><div class="line">    &#125;  </div><div class="line"></div><div class="line">//当然，每种item都需要有自己的ViewHolder</div><div class="line">class EditIDCardItemHolder extends RecyclerView.ViewHolder &#123;</div><div class="line"></div><div class="line">    public EditIDCardItemHolder(View itemView) &#123;</div><div class="line">        super(itemView);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">//onBindViewHolder()中绑定数据 也需要知道当前布局属于哪个item</div><div class="line"> @Override</div><div class="line">    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) &#123;</div><div class="line">        final FieldInfoBean bean = fieldsList.get(position);</div><div class="line"></div><div class="line">        if (holder instanceof EditTextItemHolder) &#123;</div><div class="line">            ...</div><div class="line">        &#125; </div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>是不是发现RecyclerView的多布局实现其实也是十分简单呢。</p>
+<h3 id="二、RecyclerView中使用EditText"><a href="#二、RecyclerView中使用EditText" class="headerlink" title="二、RecyclerView中使用EditText"></a>二、RecyclerView中使用EditText</h3><p>网上看到博友在ListView中使用EditText时，点击editText后软键盘弹出后会导致光标失去焦点，这里我在使用RecyclerView的时候并没有发现光标问题，这里先跳过光标问题。   </p>
+<h5 id="使用EditText是主要问题在于如何获取到EditText的值，以及刷新adapter时，出现editText值错乱"><a href="#使用EditText是主要问题在于如何获取到EditText的值，以及刷新adapter时，出现editText值错乱" class="headerlink" title="使用EditText是主要问题在于如何获取到EditText的值，以及刷新adapter时，出现editText值错乱"></a>使用EditText是主要问题在于如何获取到EditText的值，以及刷新adapter时，出现editText值错乱</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">//可能是由于RecyclerView的回收，无法使用getView（）.getText()来获取EditText的值</div><div class="line">//很多博友也是使用了addTextChangedListener（watcher()）的方式来获取用户输入的值，并且需要及时的保存数据</div><div class="line">       TextWatcher watcher = new TextWatcher() &#123;</div><div class="line">                @Override</div><div class="line">                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) &#123;</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                @Override</div><div class="line">                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) &#123;</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                @Override</div><div class="line">                public void afterTextChanged(Editable editable) &#123;</div><div class="line">                    if (TextUtils.isEmpty(editable.toString())) &#123;</div><div class="line">                        bean.setValue(&quot;&quot;);</div><div class="line">                    &#125; else &#123;</div><div class="line">                        bean.setValue(editable.toString());</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;;</div><div class="line">            </div><div class="line">            ((EditTextItemHolder)holder).et_text.addTextChangedListener(watcher);</div></pre></td></tr></table></figure>
+<h5 id="上述操作方式其实给自己埋了一个坑，仅仅操作EditText时并没有什么反常，而当我需要调用Adapter的刷新方法时候一个大坑等着我们…"><a href="#上述操作方式其实给自己埋了一个坑，仅仅操作EditText时并没有什么反常，而当我需要调用Adapter的刷新方法时候一个大坑等着我们…" class="headerlink" title="上述操作方式其实给自己埋了一个坑，仅仅操作EditText时并没有什么反常，而当我需要调用Adapter的刷新方法时候一个大坑等着我们…"></a>上述操作方式其实给自己埋了一个坑，仅仅操作EditText时并没有什么反常，而当我需要调用Adapter的刷新方法时候一个大坑等着我们…</h5><p>常用的刷新方式有以下两种：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">adapter.notifyItemChanged(pos);//仅刷新单个item</div><div class="line">adapter.notifyDataSetChanged();//刷新整个adapter  否则选中省信息后，市信息不能回归默认</div></pre></td></tr></table></figure>
+<p>得益于RecyclerView的优化，相比于ListView增加了单个item刷新操作，所以在项目中当我仅需刷新单个item时并没有异常，textWatcher 工作的很正常  </p>
+<p><em>当我使用多级联动时候，由于每一级分处不同的item，所以我不得不调用第二种方式去刷新整个item（虽然我也可以多次调用第一种方式，这里讨论必须全部刷新的情况下），刷新完之后发现zheng’ge整个List<string> 混乱了，数据错乱，而我发现仅仅是使用了EditText的地方出错，并且是在使用了TextWatcher的item，似乎找到了问题的根源…</string></em></p>
+<h6 id="于是，果断开启debug模式，最终确认确实是TextWatcher的问题，由于调用了notifyDataSetChanged（）方法，而导致EditText重绘，并且每次都走了textWatcher的afterTextChanged（）方法，于是网上查了资料，最终顺利解决了问题。记录如下："><a href="#于是，果断开启debug模式，最终确认确实是TextWatcher的问题，由于调用了notifyDataSetChanged（）方法，而导致EditText重绘，并且每次都走了textWatcher的afterTextChanged（）方法，于是网上查了资料，最终顺利解决了问题。记录如下：" class="headerlink" title="于是，果断开启debug模式，最终确认确实是TextWatcher的问题，由于调用了notifyDataSetChanged（）方法，而导致EditText重绘，并且每次都走了textWatcher的afterTextChanged（）方法，于是网上查了资料，最终顺利解决了问题。记录如下："></a>于是，果断开启debug模式，最终确认确实是TextWatcher的问题，由于调用了notifyDataSetChanged（）方法，而导致EditText重绘，并且每次都走了textWatcher的afterTextChanged（）方法，于是网上查了资料，最终顺利解决了问题。记录如下：</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">//完整代码</div><div class="line">       if (holder instanceof EditTextItemHolder) &#123;</div><div class="line">            //1、为了避免TextWatcher在第2步被调用，提前将他移除。</div><div class="line">            if (((EditTextItemHolder) holder).et_text.getTag() instanceof TextWatcher) &#123;</div><div class="line">                ((EditTextItemHolder) holder).et_text.removeTextChangedListener((TextWatcher) (((EditTextItemHolder) holder).et_text.getTag()));</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            </div><div class="line">            // 第2步：移除TextWatcher之后，设置EditText的Text。</div><div class="line">            ((EditTextItemHolder) holder).et_text.setText(bean.getValue());</div><div class="line"></div><div class="line">        </div><div class="line">            TextWatcher watcher = new TextWatcher() &#123;</div><div class="line">                @Override</div><div class="line">                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) &#123;</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                @Override</div><div class="line">                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) &#123;</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                @Override</div><div class="line">                public void afterTextChanged(Editable editable) &#123;</div><div class="line">                    if (TextUtils.isEmpty(editable.toString())) &#123;</div><div class="line">                        bean.setValue(&quot;&quot;);</div><div class="line">                    &#125; else &#123;</div><div class="line">                        bean.setValue(editable.toString());</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;;</div><div class="line">            ((EditTextItemHolder) holder).et_text.addTextChangedListener(watcher);</div><div class="line">            ((EditTextItemHolder) holder).et_text.setTag(watcher);</div><div class="line">        &#125;</div></pre></td></tr></table></figure>
+<p><em>自此也算顺利解决了这个问题，博友们有好的实现方式还请分享【笑脸】</em></p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://hwzhang.top/2017/03/21/RecyclerView-multiple-item-type/#comments" class="article-comment-link ds-thread-count" data-thread-key="http://hwzhang.top/2017/03/21/RecyclerView-multiple-item-type/">评论</a>
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-wifi-dev" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -845,6 +957,25 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/2017/03/21/RecyclerView-multiple-item-type/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://upload-images.jianshu.io/upload_images/2510928-478b85ab1c69f700.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)" alt="RecyclerView multiple item type" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2017/03/21/RecyclerView-multiple-item-type/" class="title">RecyclerView multiple item type</a></p>
+                            <p class="item-date"><time datetime="2017-03-21T09:54:39.000Z" itemprop="datePublished">2017-03-21</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/2016/09/13/wifi-dev/" class="thumbnail">
     
     
@@ -918,25 +1049,6 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2016/07/10/okhttp-introduction/" class="thumbnail">
-    
-    
-        <span class="thumbnail-image thumbnail-none"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"></p>
-                            <p class="item-title"><a href="/2016/07/10/okhttp-introduction/" class="title">okHttp3.0入门</a></p>
-                            <p class="item-date"><time datetime="2016-07-10T14:03:58.000Z" itemprop="datePublished">2016-07-10</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -948,7 +1060,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">归档</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">2</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">2</span></li></ul>
         </div>
     </div>
 
@@ -957,7 +1069,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">标签</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android-unwidget-study/">android-unwidget-study</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android-widget-study/">android-widget-study</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android-开源项目学习/">android-开源项目学习</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android开发工具/">android开发工具</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android第三方接入/">android第三方接入</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android-unwidget-study/">android-unwidget-study</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android-widget-study/">android-widget-study</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android-开源项目学习/">android-开源项目学习</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android开发工具/">android开发工具</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android第三方接入/">android第三方接入</a><span class="tag-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -966,7 +1078,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/android-unwidget-study/" style="font-size: 10px;">android-unwidget-study</a> <a href="/tags/android-widget-study/" style="font-size: 10px;">android-widget-study</a> <a href="/tags/android-开源项目学习/" style="font-size: 10px;">android-开源项目学习</a> <a href="/tags/android开发工具/" style="font-size: 10px;">android开发工具</a> <a href="/tags/android第三方接入/" style="font-size: 10px;">android第三方接入</a>
+            <a href="/tags/android-unwidget-study/" style="font-size: 10px;">android-unwidget-study</a> <a href="/tags/android-widget-study/" style="font-size: 20px;">android-widget-study</a> <a href="/tags/android-开源项目学习/" style="font-size: 10px;">android-开源项目学习</a> <a href="/tags/android开发工具/" style="font-size: 10px;">android开发工具</a> <a href="/tags/android第三方接入/" style="font-size: 10px;">android第三方接入</a>
         </div>
     </div>
 
