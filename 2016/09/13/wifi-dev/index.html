@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>android Wifi 相关 | David&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="眼看自己来这个公司的第一个项目，也是公司的核心项目即将上线了，细数一番，已有半年之久，中间也做了一些小项目，忍不住惊叹了一下，这么久了居然没有做下笔记，真是罪过罪过。记得学习android之时就喜欢记下开发知识点，开发技巧。在我看来，总结可以使自己稳步进步。趁项目稍微空余时期，总结一下，涉及到WIFI开发相关的东西相当之多，这里主要记录一下项目中用到的相关知识。【感谢博友的资料http://sma">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android Wifi 相关">
+<meta property="og:url" content="http://yoursite.com/2016/09/13/wifi-dev/index.html">
+<meta property="og:site_name" content="David's Blog">
+<meta property="og:description" content="眼看自己来这个公司的第一个项目，也是公司的核心项目即将上线了，细数一番，已有半年之久，中间也做了一些小项目，忍不住惊叹了一下，这么久了居然没有做下笔记，真是罪过罪过。记得学习android之时就喜欢记下开发知识点，开发技巧。在我看来，总结可以使自己稳步进步。趁项目稍微空余时期，总结一下，涉及到WIFI开发相关的东西相当之多，这里主要记录一下项目中用到的相关知识。【感谢博友的资料http://sma">
+<meta property="og:image" content="http://o930uobjh.bkt.clouddn.com/wifi_state.png">
+<meta property="og:updated_time" content="2017-03-21T07:43:53.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="android Wifi 相关">
+<meta name="twitter:description" content="眼看自己来这个公司的第一个项目，也是公司的核心项目即将上线了，细数一番，已有半年之久，中间也做了一些小项目，忍不住惊叹了一下，这么久了居然没有做下笔记，真是罪过罪过。记得学习android之时就喜欢记下开发知识点，开发技巧。在我看来，总结可以使自己稳步进步。趁项目稍微空余时期，总结一下，涉及到WIFI开发相关的东西相当之多，这里主要记录一下项目中用到的相关知识。【感谢博友的资料http://sma">
+<meta name="twitter:image" content="http://o930uobjh.bkt.clouddn.com/wifi_state.png">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">David&#39;s Blog</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">Home</a>
+                
+                    <a class="main-nav-link" href="/archives">Archives</a>
+                
+                    <a class="main-nav-link" href="/categories">Categories</a>
+                
+                    <a class="main-nav-link" href="/tags">Tags</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="https://avatars3.githubusercontent.com/u/15151995?v=3&amp;s=40" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">Home</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">Archives</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">Categories</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">Tags</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="https://avatars3.githubusercontent.com/u/15151995?v=3&amp;s=40" />
+            <h2 id="name">heweizhang</h2>
+            <h3 id="title">Android Application Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>XiaMen, China</span>
+            <a id="follow" target="_blank" href="http://www.jianshu.com/u/bc439f0553f4">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                5
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                5
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/heweizhang" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/17505926606@163.com" target="_blank" title="email" class=tooltip>
+                            <i class="fa fa-email"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-wifi-dev" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            android Wifi 相关
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2016/09/13/wifi-dev/">
+            <time datetime="2016-09-13T15:05:02.000Z" itemprop="datePublished">2016-09-13</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/android-unwidget-study/">android-unwidget-study</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h6 id="眼看自己来这个公司的第一个项目，也是公司的核心项目即将上线了，细数一番，已有半年之久，中间也做了一些小项目，忍不住惊叹了一下，这么久了居然没有做下笔记，真是罪过罪过。记得学习android之时就喜欢记下开发知识点，开发技巧。在我看来，总结可以使自己稳步进步。趁项目稍微空余时期，总结一下，涉及到WIFI开发相关的东西相当之多，这里主要记录一下项目中用到的相关知识。【感谢博友的资料http-smallwoniu-blog-51cto-com-3911954-1334951】"><a href="#眼看自己来这个公司的第一个项目，也是公司的核心项目即将上线了，细数一番，已有半年之久，中间也做了一些小项目，忍不住惊叹了一下，这么久了居然没有做下笔记，真是罪过罪过。记得学习android之时就喜欢记下开发知识点，开发技巧。在我看来，总结可以使自己稳步进步。趁项目稍微空余时期，总结一下，涉及到WIFI开发相关的东西相当之多，这里主要记录一下项目中用到的相关知识。【感谢博友的资料http-smallwoniu-blog-51cto-com-3911954-1334951】" class="headerlink" title="眼看自己来这个公司的第一个项目，也是公司的核心项目即将上线了，细数一番，已有半年之久，中间也做了一些小项目，忍不住惊叹了一下，这么久了居然没有做下笔记，真是罪过罪过。记得学习android之时就喜欢记下开发知识点，开发技巧。在我看来，总结可以使自己稳步进步。趁项目稍微空余时期，总结一下，涉及到WIFI开发相关的东西相当之多，这里主要记录一下项目中用到的相关知识。【感谢博友的资料http://smallwoniu.blog.51cto.com/3911954/1334951】"></a>眼看自己来这个公司的第一个项目，也是公司的核心项目即将上线了，细数一番，已有半年之久，中间也做了一些小项目，忍不住惊叹了一下，这么久了居然没有做下笔记，真是罪过罪过。记得学习android之时就喜欢记下开发知识点，开发技巧。在我看来，总结可以使自己稳步进步。趁项目稍微空余时期，总结一下，涉及到WIFI开发相关的东西相当之多，这里主要记录一下项目中用到的相关知识。【感谢博友的资料<a href="http://smallwoniu.blog.51cto.com/3911954/1334951" target="_blank" rel="external">http://smallwoniu.blog.51cto.com/3911954/1334951</a>】</h6><ul>
+<li><h3 id="主要类与接口"><a href="#主要类与接口" class="headerlink" title="主要类与接口"></a>主要类与接口</h3></li>
+</ul>
+<ol>
+<li><h5 id="WifiManager"><a href="#WifiManager" class="headerlink" title="WifiManager"></a>WifiManager</h5><p>wifi连接统一管理类，获取WIFI网卡的状态(WIFI网卡的状态是由一系列的整形常量来表示的)<br> <img src="http://o930uobjh.bkt.clouddn.com/wifi_state.png" alt="image"></p>
+</li>
+<li><h5 id="ScanResult"><a href="#ScanResult" class="headerlink" title="ScanResult"></a>ScanResult</h5><p> 主要用来描述已经检测出的接入点，包括接入点的地址，接入点的名称，身份认证，频率，信号强度等信息。其实就是通过wifi 硬件的扫描来获取一些周边的wifi 热点的信息。</p>
+</li>
+<li><h5 id="WifiConfiguration"><a href="#WifiConfiguration" class="headerlink" title="WifiConfiguration"></a>WifiConfiguration</h5><p>Wifi网络的配置，包括安全设置等，在我们连通一个wifi 接入点的时候，需要获取到的一些信息。主要包含四个属性：</p>
+<p>BSSID：<br>BSS是一种特殊的Ad-hoc LAN(一种支持点对点访问的无线网络应用模式)的应用，一个无线网络至少由一个连接到有线网络的AP和若干无线工作站组成，这种配置称为一个基本服务装置。一群计算机设定相同的 BSS名称，即可自成一个group，而此BSS名称，即所谓BSSID。通常，手机WLAN中，bssid其实就是无线路由的MAC地址。</p>
+<p>networkid：网络ID。</p>
+<p>PreSharedKey：无线网络的安全认证模式。</p>
+<p>SSID：SSID(Service    SetIdentif)用于标识无线局域网，SSID不同的无线网络是无法进行互访的。</p>
+</li>
+<li><h5 id="WifiInfo"><a href="#WifiInfo" class="headerlink" title="WifiInfo"></a>WifiInfo</h5>wifi无线连接的描述，包括（接入点，网络连接状态，隐藏的接入点，IP地址，连接速度，MAC地址，网络ID，信号强度等信息）。这里简单介绍一下WifiManager中常用的方法:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>注释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>getSSID()</td>
+<td>获得SSID（热点名称）</td>
+</tr>
+<tr>
+<td>getBSSID()</td>
+<td>获取BSSID</td>
+</tr>
+<tr>
+<td>getDetailedStateOf()</td>
+<td>获取客户端的连通性</td>
+</tr>
+<tr>
+<td>getHiddenSSID()</td>
+<td>获得SSID 是否被隐藏</td>
+</tr>
+<tr>
+<td>getIpAddress()</td>
+<td>获取IP 地址</td>
+</tr>
+<tr>
+<td>getLinkSpeed()</td>
+<td>获得连接的速度(我测试时发现没什么卵用- -)</td>
+</tr>
+<tr>
+<td>getMacAddress()</td>
+<td>获得Mac 地址</td>
+</tr>
+<tr>
+<td>getRssi()</td>
+<td>获得802.11n 网络的信号</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="在AndroidManifest-xml进行对WIFI操作的权限设置"><a href="#在AndroidManifest-xml进行对WIFI操作的权限设置" class="headerlink" title="在AndroidManifest.xml进行对WIFI操作的权限设置"></a>在AndroidManifest.xml进行对WIFI操作的权限设置</h3><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;!-- 以下是使用wifi访问网络所需的权限 --&gt;</div><div class="line">  &lt;uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"&gt;&lt;/uses-permission&gt;</div><div class="line">  &lt;uses-permission android:name="android.permission.CHANGE_WIFI_STATE"&gt;&lt;/uses-permission&gt;</div><div class="line">  &lt;uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"&gt;&lt;/uses-permission&gt;</div><div class="line">  &lt;uses-permission android:name="android.permission.ACCESS_WIFI_STATE"&gt;&lt;/uses-permission&gt;</div></pre></td></tr></table></figure>
+<hr>
+<ul>
+<li><h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3></li>
+</ul>
+<ol>
+<li><h6 id="WIFI开发-我想第一点首先是如何打开wifi开关"><a href="#WIFI开发-我想第一点首先是如何打开wifi开关" class="headerlink" title="WIFI开发 我想第一点首先是如何打开wifi开关"></a>WIFI开发 我想第一点首先是如何打开wifi开关</h6><p>打开之前先获取WifiManager 对象，通过该对象的isWifiEnabled():boolean  方法来获取当前wifi的开启情况，如果未打开，则执行打开wifi开关操作</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">WifiManager  mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);</div><div class="line"><span class="keyword">if</span> (！mWifiManager.isWifiEnabled()) &#123;<span class="comment">//wifi未打开 执行打开操作</span></div><div class="line">    mWifiManager.setWifiEnabled(<span class="keyword">true</span>);<span class="comment">//同样的执行关闭操作的话： mWifiManager.setWifiEnabled(false);</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><h6 id="WIFI打开之后自然是执行扫描操作，搜索周边范围内的热点信息"><a href="#WIFI打开之后自然是执行扫描操作，搜索周边范围内的热点信息" class="headerlink" title="WIFI打开之后自然是执行扫描操作，搜索周边范围内的热点信息"></a>WIFI打开之后自然是执行扫描操作，搜索周边范围内的热点信息</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 扫描热点,扫描时耗时操作，如果界面中需要展示进度条的话，建议将扫描操作放在子线程中操作</div><div class="line"> */</div><div class="line"> mWifiManager.startScan();</div><div class="line"> <span class="comment">// 得到扫描结果</span></div><div class="line"> List&lt;ScanResult&gt; mWifiList = mWifiManager.getScanResults();</div><div class="line"> <span class="comment">// 得到配置好的网络连接,列表中可能出现重复的热点，并且可能是ssid为空的热点，根据需求情况 自行过滤</span></div><div class="line"> mWifiConfiguration = mWifiManager.getConfiguredNetworks();</div><div class="line"> <span class="comment">// 查看扫描结果</span></div><div class="line"> <span class="function"><span class="keyword">public</span> StringBuilder <span class="title">lookUpScan</span><span class="params">()</span> </span>&#123;</div><div class="line">    StringBuilder stringBuilder = <span class="keyword">new</span> StringBuilder();</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; mWifiList.size(); i++) &#123;</div><div class="line">            stringBuilder</div><div class="line">                    .append(<span class="string">"Index_"</span> + <span class="keyword">new</span> Integer(i + <span class="number">1</span>).toString() + <span class="string">":"</span>);</div><div class="line">            <span class="comment">// 将ScanResult信息转换成一个字符串包</span></div><div class="line">            <span class="comment">// 其中把包括：BSSID、SSID、capabilities、frequency、level</span></div><div class="line">            stringBuilder.append((mWifiList.get(i)).toString());</div><div class="line">            stringBuilder.append(<span class="string">"/n"</span>);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> stringBuilder;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+</li>
+<li><h6 id="获取正在连接中的SSID"><a href="#获取正在连接中的SSID" class="headerlink" title="获取正在连接中的SSID"></a>获取正在连接中的SSID</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">mWifiInfo.getSSID()</div><div class="line"><span class="comment">/**</span></div><div class="line"> * 获得当前连接的热点 用上面方法 可能获得的结果为： "0x" 或 "&lt;unknown ssid&gt;"</div><div class="line"> * 猜测是因为wifiInfo的问题，因此每次去getSSID（）的时候需要获得最新的wifiInfo对象</div><div class="line"> */</div></pre></td></tr></table></figure>
+</li>
+<li><h6 id="如果需要的话-对热点信号强度进行排序"><a href="#如果需要的话-对热点信号强度进行排序" class="headerlink" title="如果需要的话 对热点信号强度进行排序"></a>如果需要的话 对热点信号强度进行排序</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//将搜索到的wifi根据信号从强到弱进行排序</span></div><div class="line">  <span class="function"><span class="keyword">private</span> List&lt;ScanResult&gt; <span class="title">sortByLevel</span><span class="params">(List&lt;ScanResult&gt; list)</span> </span>&#123;</div><div class="line">      ScanResult temp = <span class="keyword">null</span>;</div><div class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; list.size(); i++)</div><div class="line">          <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; list.size(); j++) &#123;</div><div class="line">              <span class="keyword">if</span> (list.get(i).level &gt; list.get(j).level)    <span class="comment">//level属性即为强度</span></div><div class="line">              &#123;</div><div class="line">                  temp = list.get(i);</div><div class="line">                  list.set(i, list.get(j));</div><div class="line">                  list.set(j, temp);</div><div class="line">              &#125;</div><div class="line">          &#125;</div><div class="line">      <span class="keyword">return</span> list;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+</li>
+<li><h6 id="连接到热点"><a href="#连接到热点" class="headerlink" title="连接到热点"></a>连接到热点</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 众所周知 热点的加密分为三种情况：1没有密码 2用wep加密 3用wpa加密</div><div class="line"> */</div><div class="line"> </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> WifiConfiguration <span class="title">CreateWifiInfo</span><span class="params">(String SSID, String Password, <span class="keyword">int</span> Type)</span> </span>&#123;</div><div class="line">        WifiConfiguration config = <span class="keyword">new</span> WifiConfiguration();</div><div class="line">        config.allowedAuthAlgorithms.clear();</div><div class="line">        config.allowedGroupCiphers.clear();</div><div class="line">        config.allowedKeyManagement.clear();</div><div class="line">        config.allowedPairwiseCiphers.clear();</div><div class="line">        config.allowedProtocols.clear();</div><div class="line">        config.SSID = <span class="string">"\""</span> + SSID + <span class="string">"\""</span>;</div><div class="line"></div><div class="line">        WifiConfiguration tempConfig = IsExsits(SSID);</div><div class="line">        <span class="keyword">if</span> (tempConfig != <span class="keyword">null</span>) &#123;</div><div class="line">            mWifiManager.removeNetwork(tempConfig.networkId);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (Type == <span class="number">1</span>) <span class="comment">//WIFICIPHER_NOPASS</span></div><div class="line">        &#123;</div><div class="line">          <span class="comment">/*  config.wepKeys[0] = "";//连接无密码热点时加上这两句会出错</span></div><div class="line">            config.wepTxKeyIndex = 0;*/</div><div class="line">            config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (Type == <span class="number">2</span>) <span class="comment">//WIFICIPHER_WEP</span></div><div class="line">        &#123;</div><div class="line">            config.hiddenSSID = <span class="keyword">true</span>;</div><div class="line">            config.wepKeys[<span class="number">0</span>] = <span class="string">"\""</span> + Password + <span class="string">"\""</span>;</div><div class="line">            config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.SHARED);</div><div class="line">            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);</div><div class="line">            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);</div><div class="line">            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);</div><div class="line">            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104);</div><div class="line">            config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);</div><div class="line">            config.wepTxKeyIndex = <span class="number">0</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (Type == <span class="number">3</span>) <span class="comment">//WIFICIPHER_WPA</span></div><div class="line">        &#123;</div><div class="line">            config.preSharedKey = <span class="string">"\""</span> + Password + <span class="string">"\""</span>;</div><div class="line">            config.hiddenSSID = <span class="keyword">true</span>;</div><div class="line">            config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);</div><div class="line">            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);</div><div class="line">            config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);</div><div class="line">            config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);</div><div class="line">            <span class="comment">//config.allowedProtocols.set(WifiConfiguration.Protocol.WPA);</span></div><div class="line">            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);</div><div class="line">            config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);</div><div class="line">            config.status = WifiConfiguration.Status.ENABLED;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> config;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">// 添加一个网络并连接</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">addNetwork</span><span class="params">(WifiConfiguration wcg)</span> </span>&#123;</div><div class="line">        <span class="keyword">int</span> wcgID = mWifiManager.addNetwork(wcg);</div><div class="line">        <span class="keyword">boolean</span> b = mWifiManager.enableNetwork(wcgID, <span class="keyword">true</span>);</div><div class="line">        System.out.println(<span class="string">"a--"</span> + wcgID);</div><div class="line">        System.out.println(<span class="string">"b--"</span> + b);</div><div class="line">        <span class="keyword">if</span> (b) &#123;</div><div class="line">            linkingID = wcgID;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> b;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line"><span class="comment">//连接方式</span></div><div class="line"></div><div class="line">   WifiConfiguration wifiConfiguration = CreateWifiInfo(SSID, Password, Type);</div><div class="line">   <span class="keyword">boolean</span> flag = addNetwork(wifiConfiguration);<span class="comment">//连接网络</span></div><div class="line">   <span class="comment">/**</span></div><div class="line">    *flag 返回true 并不能代表热点连接成功，但是返回false一定代表连接不成功</div><div class="line">    *当密码位数不对时也会直接返回false，因此不能用该参数来判别是否连接成功</div><div class="line">    *这也是我在项目中碰到的一个难题</div><div class="line">    */</div></pre></td></tr></table></figure>
+<h4 id="项目中涉及到wifi切换连接，这个时候就需要监听热点切换情况，这是个难点。不同设备的热点连接速度也不一致，我的做法是启动一个定时任务，当wifi进行切换时先保存oldCurrentSSID，gonaLinkSSID来保存目的连接SSID，然后定时的去读取当前连接中的ssid：mWifiInfo-getSSID-来实时的监听当前热点情况，如果当前热点与oldCurrentSSID不等，并且等于gonaLinkSSID-即代表热点切换成功。这边需要考虑的是这个定时的长度，因为wifi没有正在连接的状态，所以这边无法准确知道何时连接完毕，所以这里只能给个大概的时间，同时在该时间内如果满足连接成功状态，即可提前取消定时刷新任务。同时需要结合广播（当网络状态变化时系统会发出一条广播）来得到最准确的值。"><a href="#项目中涉及到wifi切换连接，这个时候就需要监听热点切换情况，这是个难点。不同设备的热点连接速度也不一致，我的做法是启动一个定时任务，当wifi进行切换时先保存oldCurrentSSID，gonaLinkSSID来保存目的连接SSID，然后定时的去读取当前连接中的ssid：mWifiInfo-getSSID-来实时的监听当前热点情况，如果当前热点与oldCurrentSSID不等，并且等于gonaLinkSSID-即代表热点切换成功。这边需要考虑的是这个定时的长度，因为wifi没有正在连接的状态，所以这边无法准确知道何时连接完毕，所以这里只能给个大概的时间，同时在该时间内如果满足连接成功状态，即可提前取消定时刷新任务。同时需要结合广播（当网络状态变化时系统会发出一条广播）来得到最准确的值。" class="headerlink" title="项目中涉及到wifi切换连接，这个时候就需要监听热点切换情况，这是个难点。不同设备的热点连接速度也不一致，我的做法是启动一个定时任务，当wifi进行切换时先保存oldCurrentSSID，gonaLinkSSID来保存目的连接SSID，然后定时的去读取当前连接中的ssid：mWifiInfo.getSSID(),来实时的监听当前热点情况，如果当前热点与oldCurrentSSID不等，并且等于gonaLinkSSID,即代表热点切换成功。这边需要考虑的是这个定时的长度，因为wifi没有正在连接的状态，所以这边无法准确知道何时连接完毕，所以这里只能给个大概的时间，同时在该时间内如果满足连接成功状态，即可提前取消定时刷新任务。同时需要结合广播（当网络状态变化时系统会发出一条广播）来得到最准确的值。"></a>项目中涉及到wifi切换连接，这个时候就需要监听热点切换情况，这是个难点。不同设备的热点连接速度也不一致，我的做法是启动一个定时任务，当wifi进行切换时先保存oldCurrentSSID，gonaLinkSSID来保存目的连接SSID，然后定时的去读取当前连接中的ssid：mWifiInfo.getSSID(),来实时的监听当前热点情况，如果当前热点与oldCurrentSSID不等，并且等于gonaLinkSSID,即代表热点切换成功。这边需要考虑的是这个定时的长度，因为wifi没有正在连接的状态，所以这边无法准确知道何时连接完毕，所以这里只能给个大概的时间，同时在该时间内如果满足连接成功状态，即可提前取消定时刷新任务。同时需要结合广播（当网络状态变化时系统会发出一条广播）来得到最准确的值。</h4></li>
+<li><p>断开指定连接</p>
+<pre><code class="java">
+<span class="comment">// 断开指定ID的网络,这边的id在添加连接时获取 int wcgID = mWifiManager.addNetwork(wcg);</span>
+ <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">disconnectWifi</span><span class="params">(<span class="keyword">int</span> netId)</span> </span>{
+     <span class="keyword">if</span>(<span class="number">0</span> == linkingID ){
+         <span class="keyword">return</span>;
+     }
+     mWifiManager.disableNetwork(linkingID);
+     mWifiManager.disconnect();
+     LogUti.i(<span class="string">"info"</span>, <span class="string">"断开连接 id"</span> + linkingID);
+ }
+
+<span class="comment">//有些情况下我们可能并不方便拿到那个id，这个时候可以投机取巧的地方是随便连接一个不能连接成功的ssid，当ssid切换的时候 wifi会先自动断开当前连接的热点才去连接目标ssid</span>
+</code></pre>
+</li>
+</ol>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://yoursite.com/2016/09/13/wifi-dev/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="http://yoursite.com/2016/09/13/wifi-dev/">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2016/09/07/wxpay-notes/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">关于Android接入微信支付</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+</section>
+            
+                <aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/09/13/wifi-dev/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2016/09/13/wifi-dev/" class="title">android Wifi 相关</a></p>
+                            <p class="item-date"><time datetime="2016-09-13T15:05:02.000Z" itemprop="datePublished">2016-09-13</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/09/07/wxpay-notes/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2016/09/07/wxpay-notes/" class="title">关于Android接入微信支付</a></p>
+                            <p class="item-date"><time datetime="2016-09-07T13:13:50.000Z" itemprop="datePublished">2016-09-07</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/09/01/android-utils/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2016/09/01/android-utils/" class="title">android开发中常用的工具类积累</a></p>
+                            <p class="item-date"><time datetime="2016-09-01T11:50:25.000Z" itemprop="datePublished">2016-09-01</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/07/15/SwipeLayout/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2016/07/15/SwipeLayout/" class="title">androidv4包下拉刷新布局SwipeRefreshLayout</a></p>
+                            <p class="item-date"><time datetime="2016-07-15T12:09:32.000Z" itemprop="datePublished">2016-07-15</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/07/10/okhttp-introduction/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2016/07/10/okhttp-introduction/" class="title">okHttp3.0入门</a></p>
+                            <p class="item-date"><time datetime="2016-07-10T14:03:58.000Z" itemprop="datePublished">2016-07-10</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">2</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android-unwidget-study/">android-unwidget-study</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android-widget-study/">android-widget-study</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android-开源项目学习/">android-开源项目学习</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android开发工具/">android开发工具</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android第三方接入/">android第三方接入</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/android-unwidget-study/" style="font-size: 10px;">android-unwidget-study</a> <a href="/tags/android-widget-study/" style="font-size: 10px;">android-widget-study</a> <a href="/tags/android-开源项目学习/" style="font-size: 10px;">android-开源项目学习</a> <a href="/tags/android开发工具/" style="font-size: 10px;">android开发工具</a> <a href="/tags/android第三方接入/" style="font-size: 10px;">android第三方接入</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://www.jianshu.com/u/bc439f0553f4">我的简书</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2017 David-zhw<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script>
+    var disqus_config = function () {
+        
+            this.page.url = 'http://yoursite.com/2016/09/13/wifi-dev/';
+        
+        this.page.identifier = 'wifi-dev';
+    };
+    (function() { 
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'hexo-theme-icarus' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>

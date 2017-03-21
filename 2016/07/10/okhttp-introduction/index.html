@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>okHttp3.0入门 | David&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="最近身边越来越多的小伙伴提到okHttp，于是我也打算趁着新项目开始前着手学习一下okhttp，并且希望能在新项目中用起来。Google了一些材料，照着文档写了简单的demo，并且做了最简单的封装。每个项目中的网络请求接口一般都不会太少，所以不封装是不靠谱的，然而okHttp确实封装起来比较麻烦一些。  OkHttp官网地址： http://square.github.io/okhttp/
+  O">
+<meta property="og:type" content="article">
+<meta property="og:title" content="okHttp3.0入门">
+<meta property="og:url" content="http://yoursite.com/2016/07/10/okhttp-introduction/index.html">
+<meta property="og:site_name" content="David's Blog">
+<meta property="og:description" content="最近身边越来越多的小伙伴提到okHttp，于是我也打算趁着新项目开始前着手学习一下okhttp，并且希望能在新项目中用起来。Google了一些材料，照着文档写了简单的demo，并且做了最简单的封装。每个项目中的网络请求接口一般都不会太少，所以不封装是不靠谱的，然而okHttp确实封装起来比较麻烦一些。  OkHttp官网地址： http://square.github.io/okhttp/
+  O">
+<meta property="og:updated_time" content="2017-03-21T07:43:53.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="okHttp3.0入门">
+<meta name="twitter:description" content="最近身边越来越多的小伙伴提到okHttp，于是我也打算趁着新项目开始前着手学习一下okhttp，并且希望能在新项目中用起来。Google了一些材料，照着文档写了简单的demo，并且做了最简单的封装。每个项目中的网络请求接口一般都不会太少，所以不封装是不靠谱的，然而okHttp确实封装起来比较麻烦一些。  OkHttp官网地址： http://square.github.io/okhttp/
+  O">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">David&#39;s Blog</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">Home</a>
+                
+                    <a class="main-nav-link" href="/archives">Archives</a>
+                
+                    <a class="main-nav-link" href="/categories">Categories</a>
+                
+                    <a class="main-nav-link" href="/tags">Tags</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="https://avatars3.githubusercontent.com/u/15151995?v=3&amp;s=40" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">Home</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">Archives</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">Categories</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">Tags</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="https://avatars3.githubusercontent.com/u/15151995?v=3&amp;s=40" />
+            <h2 id="name">heweizhang</h2>
+            <h3 id="title">Android Application Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>XiaMen, China</span>
+            <a id="follow" target="_blank" href="http://www.jianshu.com/u/bc439f0553f4">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                5
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                5
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/heweizhang" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/17505926606@163.com" target="_blank" title="email" class=tooltip>
+                            <i class="fa fa-email"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-okhttp-introduction" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            okHttp3.0入门
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2016/07/10/okhttp-introduction/">
+            <time datetime="2016-07-10T14:03:58.000Z" itemprop="datePublished">2016-07-10</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/android-开源项目学习/">android-开源项目学习</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h6 id="最近身边越来越多的小伙伴提到okHttp，于是我也打算趁着新项目开始前着手学习一下okhttp，并且希望能在新项目中用起来。Google了一些材料，照着文档写了简单的demo，并且做了最简单的封装。每个项目中的网络请求接口一般都不会太少，所以不封装是不靠谱的，然而okHttp确实封装起来比较麻烦一些。"><a href="#最近身边越来越多的小伙伴提到okHttp，于是我也打算趁着新项目开始前着手学习一下okhttp，并且希望能在新项目中用起来。Google了一些材料，照着文档写了简单的demo，并且做了最简单的封装。每个项目中的网络请求接口一般都不会太少，所以不封装是不靠谱的，然而okHttp确实封装起来比较麻烦一些。" class="headerlink" title="最近身边越来越多的小伙伴提到okHttp，于是我也打算趁着新项目开始前着手学习一下okhttp，并且希望能在新项目中用起来。Google了一些材料，照着文档写了简单的demo，并且做了最简单的封装。每个项目中的网络请求接口一般都不会太少，所以不封装是不靠谱的，然而okHttp确实封装起来比较麻烦一些。"></a>最近身边越来越多的小伙伴提到okHttp，于是我也打算趁着新项目开始前着手学习一下okhttp，并且希望能在新项目中用起来。Google了一些材料，照着文档写了简单的demo，并且做了最简单的封装。每个项目中的网络请求接口一般都不会太少，所以不封装是不靠谱的，然而okHttp确实封装起来比较麻烦一些。</h6><p>  OkHttp官网地址： <a href="http://square.github.io/okhttp/" target="_blank" rel="external">http://square.github.io/okhttp/</a></p>
+<p>  OkHttp GitHub地址：<a href="https://github.com/square/okhttp" target="_blank" rel="external">https://github.com/square/okhttp</a></p>
+<ul>
+<li><p>配置方法 导入jar包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">compile &apos;com.squareup.okhttp3:okhttp:3.3.1&apos;</div></pre></td></tr></table></figure>
+</li>
+<li><p>开启网络权限不解释。</p>
+</li>
+</ul>
+<hr>
+<ul>
+<li><h2 id="基础用法介绍，GET，POST请求，同步，异步"><a href="#基础用法介绍，GET，POST请求，同步，异步" class="headerlink" title="基础用法介绍，GET，POST请求，同步，异步"></a>基础用法介绍，GET，POST请求，同步，异步</h2><h4 id="同步Http-GET请求"><a href="#同步Http-GET请求" class="headerlink" title="同步Http GET请求"></a>同步Http GET请求</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">OkHttpClient client = <span class="keyword">new</span> OkHttpClient();</div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">httpGet</span><span class="params">(String url)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">        <span class="keyword">final</span> Request request = <span class="keyword">new</span> Request.Builder()</div><div class="line">                .get()</div><div class="line">                .tag(<span class="keyword">this</span>)</div><div class="line">                .url(url)</div><div class="line">                .build();<span class="comment">//Request是OkHttp中访问的请求，Builder是辅助类，Response即OkHttp中的响应</span></div><div class="line">    <span class="keyword">final</span> Response response = client.newCall(request).execute();</div><div class="line">    <span class="keyword">if</span> (response.isSuccessful()) &#123;</div><div class="line">        <span class="keyword">return</span> response.body().string();</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IOException(<span class="string">"Unexpected code "</span> + response);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">    <span class="comment">/**</span></div><div class="line">      * onResponse回调的参数是response，一般情况下，比如</div><div class="line">      * 我们希望获得返回的字符串，可以通过response.body().string()获取；</div><div class="line">      * 如果希望获得返回的二进制字节数组，则调用response.body().bytes()；</div><div class="line">      * 如果你想拿到返回的inputStream，则调用response.body().byteStream()</div><div class="line">      */</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr>
+<h4 id="同步Http-POST请求"><a href="#同步Http-POST请求" class="headerlink" title="同步Http POST请求"></a>同步Http POST请求</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//POST提交键值对 </span></div><div class="line">OkHttpClient client = <span class="keyword">new</span> OkHttpClient();</div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">httpPost</span><span class="params">(String url)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">        RequestBody formBody = <span class="keyword">new</span> FormBody.Builder()</div><div class="line">                .add(<span class="string">"u_Phone"</span>, <span class="string">"10086"</span>)<span class="comment">//传入参数</span></div><div class="line">                .add(<span class="string">"code"</span>, <span class="string">"111111"</span>)<span class="comment">//传入参数</span></div><div class="line">                .add(<span class="string">"encodestr"</span>, MD5Utils.ecodeTwice(<span class="string">"10086"</span> + <span class="string">"111111"</span> +     </div><div class="line">                      <span class="string">"action_login"</span>))<span class="comment">//传入参数</span></div><div class="line">                .build();</div><div class="line">        <span class="keyword">final</span> Request request = <span class="keyword">new</span> Request.Builder()</div><div class="line">                .url(url)</div><div class="line">                .post(formBody)</div><div class="line">                .build();</div><div class="line">       <span class="keyword">final</span> Response response = client.newCall(request).execute();</div><div class="line">         <span class="keyword">if</span> (response.isSuccessful()) &#123;</div><div class="line">        <span class="keyword">return</span> response.body().string();</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IOException(<span class="string">"Unexpected code "</span> + response);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//POST提交Json数据 </span></div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> MediaType JSON = MediaType.parse(<span class="string">"application/json; charset=utf-8"</span>);</div><div class="line">OkHttpClient client = <span class="keyword">new</span> OkHttpClient();</div><div class="line"><span class="function">String <span class="title">post</span><span class="params">(String url, String json)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">    RequestBody body = RequestBody.create(JSON, json);</div><div class="line">    Request request = <span class="keyword">new</span> Request.Builder()</div><div class="line">      .url(url)</div><div class="line">      .post(body)</div><div class="line">      .build();</div><div class="line">    Response response = client.newCall(request).execute();</div><div class="line">    f (response.isSuccessful()) &#123;</div><div class="line">        <span class="keyword">return</span> response.body().string();</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IOException(<span class="string">"Unexpected code "</span> + response);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<h4 id="异步-Http-Get"><a href="#异步-Http-Get" class="headerlink" title="异步 Http Get"></a>异步 Http Get</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">asyGet</span><span class="params">(String url)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">       <span class="keyword">final</span> Request request = <span class="keyword">new</span> Request.Builder()</div><div class="line">               .get()</div><div class="line">               .tag(<span class="keyword">this</span>)</div><div class="line">               .url(url)</div><div class="line">               .build();<span class="comment">//Request是OkHttp中访问的请求，Builder是辅助类，Response即OkHttp中的响应</span></div><div class="line">       <span class="keyword">final</span> Response response = client.newCall(request).execute();</div><div class="line">       Call call = client.newCall(request);</div><div class="line">       <span class="comment">/**</span></div><div class="line">        * 我们希望以异步的方式去执行请求，所以我们调用的是call.enqueue，将call加入调度队列，然后等待任务执行完成，我们在Callback中即可得到结果。</div><div class="line">        */</div><div class="line">       call.enqueue(<span class="keyword">new</span> Callback() &#123;</div><div class="line">           <span class="meta">@Override</span></div><div class="line">           <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onFailure</span><span class="params">(Call call, IOException e)</span> </span>&#123;</div><div class="line">               <span class="keyword">try</span> &#123;</div><div class="line">                   <span class="keyword">throw</span> <span class="keyword">new</span> IOException(<span class="string">"UnException code"</span> + response);</div><div class="line">               &#125; <span class="keyword">catch</span> (IOException e1) &#123;</div><div class="line">                   e1.printStackTrace();</div><div class="line">               &#125;</div><div class="line">           &#125;</div><div class="line">           <span class="meta">@Override</span></div><div class="line">           <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onResponse</span><span class="params">(Call call, Response response)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">               Log.i(<span class="string">"info"</span>, <span class="string">"打印GET响应的数据：:"</span> + response.body().string());</div><div class="line">           &#125;</div><div class="line">       &#125;);</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<hr>
+<h4 id="异步HTTP-Post"><a href="#异步HTTP-Post" class="headerlink" title="异步HTTP Post"></a>异步HTTP Post</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">asyPost</span><span class="params">(String url)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">    RequestBody formBody = <span class="keyword">new</span> FormBody.Builder()</div><div class="line">            .add(<span class="string">"u_Phone"</span>, <span class="string">"10086"</span>)</div><div class="line">            .add(<span class="string">"code"</span>, <span class="string">"111111"</span>)</div><div class="line">            .add(<span class="string">"encodestr"</span>, MD5Utils.ecodeTwice(<span class="string">"10086"</span> + <span class="string">"111111"</span> + <span class="string">"action_login"</span>))</div><div class="line">            .build();</div><div class="line">    <span class="keyword">final</span> Request request = <span class="keyword">new</span> Request.Builder()</div><div class="line">            .url(url)</div><div class="line">            .post(formBody)</div><div class="line">            .build();</div><div class="line">    client.newCall(request).enqueue(<span class="keyword">new</span> Callback() &#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onFailure</span><span class="params">(Call call, IOException e)</span> </span>&#123;</div><div class="line">            Log.e(<span class="string">"info"</span>, String.valueOf(e));</div><div class="line">        &#125;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onResponse</span><span class="params">(Call call, Response response)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">            Log.i(<span class="string">"info"</span>, <span class="string">"打印POST响应的数据："</span> + response.body().string());</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<p>看了基本用法后是不是感觉入门也是十分简单，跟volley十分相似，但是有一点却是十分懵逼的- -。因为volley的每一个请求都需要加入到请求队列中，并且可以使用tag来取消当前网络请求,如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">requestQueue.add(req);</div></pre></td></tr></table></figure></p>
+<p>于是用惯了volley的我就不能忍了，于是乎查资料，发现在okhttp的用法跟volley不一样，所以这个一时我就找不到这个tag的作用，一脸懵逼状- -。只允许设置tag，却没法用tag给取消这个请求，kiding me？ 想想这么流行的框架不可能会留下这种低级错误啊，于是乎查看源码（似懂非懂–），Google，终于找到对应的解决方式：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">cancelCallsWithTag</span><span class="params">(Object tag)</span></span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (tag == <span class="keyword">null</span> || mOkHttpClient == <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">synchronized</span> (mOkHttpClient.dispatcher().getClass()) &#123;</div><div class="line">        <span class="keyword">for</span> (Call call : mOkHttpClient.dispatcher().queuedCalls()) &#123;</div><div class="line">            <span class="keyword">if</span> (tag.equals(call.request().tag())) &#123;</div><div class="line">                call.cancel();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">for</span> (Call call : mOkHttpClient.dispatcher().runningCalls()) &#123;</div><div class="line">            <span class="keyword">if</span> (tag.equals(call.request().tag())) call.cancel();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>最基本的用法了解了，是时候该着手进行简单的封装<br>这里主要用到 OkHttpClientManager类，与回调接收接口ResultCallback<br>偷懒一下 ，直接贴源码了，相应解释直接在代码中注释：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.okhttpstudy.okhttp;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * Created by hwei on 2016/7/8.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ResultCallback</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(String msg)</span></span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">onResponse</span><span class="params">(String result)</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Created by hwei on 2016/7/8.</div><div class="line"> */</div><div class="line"> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OkHttpClientManager</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> OkHttpClientManager instance;</div><div class="line">    <span class="keyword">private</span> OkHttpClient mOkHttpClient;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">"OkHttpClientManager"</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">OkHttpClientManager</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">//mOkHttpClient = new OkHttpClient();</span></div><div class="line">        mOkHttpClient = <span class="keyword">new</span> OkHttpClient.Builder()</div><div class="line">                .connectTimeout(<span class="number">1000l</span>, TimeUnit.MILLISECONDS)</div><div class="line">                .readTimeout(<span class="number">10000L</span>, TimeUnit.MILLISECONDS)</div><div class="line">                <span class="comment">//.cache(cache)</span></div><div class="line">                .build();</div><div class="line"></div><div class="line">        <span class="comment">//cookie enabled</span></div><div class="line">        <span class="comment">//cookie相关的东西还有很多需要研究，以后慢慢补充</span></div><div class="line"><span class="comment">//        mOkHttpClient.cookieJar(new CookieManager(null, CookiePolicy.ACCEPT_ORIGINAL_SERVER));</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> OkHttpClientManager <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">synchronized</span> (OkHttpClientManager.class) &#123;</div><div class="line">                <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</div><div class="line">                    instance = <span class="keyword">new</span> OkHttpClientManager();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> instance;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">cancelCallsWithTag</span><span class="params">(Object tag)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (tag == <span class="keyword">null</span> || mOkHttpClient == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">synchronized</span> (mOkHttpClient.dispatcher().getClass()) &#123;</div><div class="line">            <span class="keyword">for</span> (Call call : mOkHttpClient.dispatcher().queuedCalls()) &#123;</div><div class="line">                <span class="keyword">if</span> (tag.equals(call.request().tag())) &#123;</div><div class="line">                    call.cancel();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">for</span> (Call call : mOkHttpClient.dispatcher().runningCalls()) &#123;</div><div class="line">                <span class="keyword">if</span> (tag.equals(call.request().tag())) call.cancel();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getAsyn</span><span class="params">(<span class="keyword">final</span> Activity activity, String url, Map&lt;String, String&gt; requestmap, <span class="keyword">final</span>                  ResultCallback callback)</span> </span>&#123;</div><div class="line"></div><div class="line">        <span class="keyword">final</span> Request request = <span class="keyword">new</span> Request.Builder()</div><div class="line">                .get()</div><div class="line">                .tag(activity.getClass().getSimpleName())</div><div class="line">                .url(onBuildGetParams(url, requestmap))<span class="comment">//get请求，参数拼接</span></div><div class="line">                .build();<span class="comment">//Request是OkHttp中访问的请求，Builder是辅助类，Response即OkHttp中的响应</span></div><div class="line">        Call call = mOkHttpClient.newCall(request);</div><div class="line">        call.enqueue(<span class="keyword">new</span> Callback() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onFailure</span><span class="params">(Call call, IOException e)</span> </span>&#123;</div><div class="line">                callback.onError(String.valueOf(e));</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="comment">/**</span></div><div class="line">             *</div><div class="line">             * <span class="doctag">@param</span> call</div><div class="line">             * <span class="doctag">@param</span> response</div><div class="line">             * <span class="doctag">@throws</span> IOException</div><div class="line">             * onResponse回调的参数是response，一般情况下，比如</div><div class="line">             * 我们希望获得返回的字符串，可以通过response.body().string()获取；</div><div class="line">             * 如果希望获得返回的二进制字节数组，则调用response.body().bytes()；</div><div class="line">             * 如果你想拿到返回的inputStream，则调用response.body().byteStream()</div><div class="line">             */</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onResponse</span><span class="params">(Call call, <span class="keyword">final</span> Response response)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">                <span class="keyword">if</span> (response.isSuccessful()) &#123;</div><div class="line">                    activity.runOnUiThread(<span class="keyword">new</span> Runnable() &#123;<span class="comment">//用惯了volley的人初次搞这个可能都会习惯直接调用ui线程去更新ui，然后okhttp在这一点上一点却让人“不太省心”，我们必须自己进行线程切换</span></div><div class="line">                        <span class="meta">@Override</span></div><div class="line">                        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                            <span class="keyword">try</span> &#123;</div><div class="line">                                callback.onResponse(response.body().string());</div><div class="line">                            &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">                                e.printStackTrace();</div><div class="line">                            &#125;</div><div class="line"></div><div class="line">                        &#125;</div><div class="line">                    &#125;);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">postAsyn</span><span class="params">(<span class="keyword">final</span> Activity activity, String url, Map&lt;String, String&gt; requestmap, <span class="keyword">final</span>         ResultCallback callback)</span> </span>&#123;</div><div class="line"></div><div class="line">        MediaType JSON = MediaType.parse(<span class="string">"application/json; charset=utf-8"</span>);</div><div class="line">        JSONObject jsonObject = <span class="keyword">new</span> JSONObject(requestmap);</div><div class="line">        RequestBody requestBody = RequestBody.create(JSON, String.valueOf(jsonObject));</div><div class="line">        LogUti.i(<span class="string">"info"</span>, <span class="string">"requestmapJson"</span> + String.valueOf(jsonObject));</div><div class="line">        Request request = <span class="keyword">new</span> Request.Builder()</div><div class="line">                .url(url)</div><div class="line">                .tag(activity.getClass().getSimpleName())</div><div class="line">                .post(requestBody)</div><div class="line">                .build();</div><div class="line">        Call call = mOkHttpClient.newCall(request);</div><div class="line">        call.enqueue(<span class="keyword">new</span> Callback() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onFailure</span><span class="params">(Call call, IOException e)</span> </span>&#123;</div><div class="line">                callback.onError(String.valueOf(e));</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onResponse</span><span class="params">(Call call, <span class="keyword">final</span> Response response)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">                <span class="keyword">if</span> (response.isSuccessful()) &#123;</div><div class="line">                    activity.runOnUiThread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">                        <span class="meta">@Override</span></div><div class="line">                        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                            <span class="keyword">try</span> &#123;</div><div class="line">                                callback.onResponse(response.body().string());</div><div class="line">                            &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">                                e.printStackTrace();</div><div class="line">                            &#125;</div><div class="line">                        &#125;</div><div class="line">                    &#125;);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line">* get请求参数的封装，构造成与POST同样的调用方式</div><div class="line">*/</div><div class="line">    <span class="function"><span class="keyword">private</span> String <span class="title">onBuildGetParams</span><span class="params">(String url, Map&lt;String, String&gt; map)</span> </span>&#123;</div><div class="line">        StringBuilder sb = <span class="keyword">new</span> StringBuilder(url);</div><div class="line">        <span class="keyword">boolean</span> isFirst = <span class="keyword">true</span>;</div><div class="line">        <span class="keyword">if</span> (map == <span class="keyword">null</span>) &#123;<span class="comment">//没有参数时 直接返回url</span></div><div class="line">            <span class="keyword">return</span> sb.toString();</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">for</span> (Map.Entry&lt;String, String&gt; entry : map.entrySet()) &#123;</div><div class="line">            <span class="keyword">if</span> (isFirst) &#123;</div><div class="line">                isFirst = <span class="keyword">false</span>;</div><div class="line">                sb.append(<span class="string">"?"</span> + entry.getKey() + <span class="string">"="</span> + entry.getValue());</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                sb.append(<span class="string">"&amp;"</span> + entry.getKey() + <span class="string">"="</span> + entry.getValue());</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        LogUti.i(<span class="string">"info"</span>, <span class="string">"url"</span> + sb.toString());</div><div class="line">        <span class="keyword">return</span> sb.toString();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h5 id="如何使用："><a href="#如何使用：" class="headerlink" title="如何使用："></a>如何使用：</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//调用post请求</span></div><div class="line">Map&lt;String,String&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line">map.put(<span class="string">"u_Phone"</span>,<span class="string">"10086"</span>);</div><div class="line">map.put(<span class="string">"url"</span>,<span class="string">"http://simple.cn/Service.php?a=checkMobile"</span>);</div><div class="line">map.put(<span class="string">"code"</span>,<span class="string">"111111"</span>);</div><div class="line">map.put(<span class="string">"encodestr"</span>,MD5Utils.ecodeTwice(<span class="string">"10086"</span> + <span class="string">"111111"</span> + <span class="string">"action_login"</span>));</div><div class="line">OkHttpClientManager.getInstance().postAsyn(<span class="keyword">this</span>,<span class="string">"http://simple.cn/Service.php?a=checkMobile"</span>, map, <span class="keyword">new</span> ResultCallback() &#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(String msg)</span> </span>&#123;</div><div class="line">        LogUti.i(<span class="string">"info"</span>,<span class="string">"post onError"</span> + msg);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onResponse</span><span class="params">(<span class="keyword">final</span> String result)</span> </span>&#123;</div><div class="line">        Toast.makeText(MainActivity.<span class="keyword">this</span>,<span class="string">"result"</span>+result ,Toast.LENGTH_LONG).show();</div><div class="line">        LogUti.i(<span class="string">"info"</span>,<span class="string">"post onResponse result:"</span> + result.toString());</div><div class="line">    &#125;</div><div class="line">&#125;);</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">//调用get请求</span></div><div class="line">Map&lt;String,String&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line">       map.put(<span class="string">"u_Phone"</span>,<span class="string">"10086"</span>);</div><div class="line">       map.put(<span class="string">"url"</span>,<span class="string">"http://simple.cn/Service.php?a=checkMobile"</span>);</div><div class="line">       map.put(<span class="string">"code"</span>,<span class="string">"111111"</span>);</div><div class="line">       map.put(<span class="string">"encodestr"</span>,MD5Utils.ecodeTwice(<span class="string">"simple"</span> + <span class="string">"111111"</span> + <span class="string">"action_login"</span>));</div><div class="line">       OkHttpClientManager.getInstance().postAsyn(<span class="keyword">this</span>,<span class="string">"http://simple.cn/Service.php?a=checkMobile"</span>, map, <span class="keyword">new</span> ResultCallback() &#123;</div><div class="line">           <span class="meta">@Override</span></div><div class="line">           <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(String msg)</span> </span>&#123;</div><div class="line">               LogUti.i(<span class="string">"info"</span>,<span class="string">"post onError"</span> + msg);</div><div class="line"></div><div class="line">           &#125;</div><div class="line"></div><div class="line">           <span class="meta">@Override</span></div><div class="line">           <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onResponse</span><span class="params">(<span class="keyword">final</span> String result)</span> </span>&#123;</div><div class="line">               Toast.makeText(MainActivity.<span class="keyword">this</span>,<span class="string">"result"</span>+result ,Toast.LENGTH_LONG).show();</div><div class="line">               LogUti.i(<span class="string">"info"</span>,<span class="string">"post onResponse result:"</span> + result.toString());</div><div class="line">           &#125;</div><div class="line">       &#125;);</div><div class="line"><span class="comment">//我们可以在每个页面销毁前取消对应tag的网络请求</span></div><div class="line"><span class="meta">@Override</span></div><div class="line">  <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</div><div class="line">      <span class="keyword">super</span>.onDestroy();</div><div class="line">      OkHttpClientManager.getInstance().cancelCallsWithTag(tag);</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<p>只是简单的进行了封装，直接将网络响应结果回调给每个Activity，而没有进行统一的解析，这里有待改进。。。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://yoursite.com/2016/07/10/okhttp-introduction/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="http://yoursite.com/2016/07/10/okhttp-introduction/">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2016/07/15/SwipeLayout/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    androidv4包下拉刷新布局SwipeRefreshLayout
+                
+            </div>
+        </a>
+    
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+</section>
+            
+                <aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/09/13/wifi-dev/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2016/09/13/wifi-dev/" class="title">android Wifi 相关</a></p>
+                            <p class="item-date"><time datetime="2016-09-13T15:05:02.000Z" itemprop="datePublished">2016-09-13</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/09/07/wxpay-notes/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2016/09/07/wxpay-notes/" class="title">关于Android接入微信支付</a></p>
+                            <p class="item-date"><time datetime="2016-09-07T13:13:50.000Z" itemprop="datePublished">2016-09-07</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/09/01/android-utils/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2016/09/01/android-utils/" class="title">android开发中常用的工具类积累</a></p>
+                            <p class="item-date"><time datetime="2016-09-01T11:50:25.000Z" itemprop="datePublished">2016-09-01</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/07/15/SwipeLayout/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2016/07/15/SwipeLayout/" class="title">androidv4包下拉刷新布局SwipeRefreshLayout</a></p>
+                            <p class="item-date"><time datetime="2016-07-15T12:09:32.000Z" itemprop="datePublished">2016-07-15</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/07/10/okhttp-introduction/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2016/07/10/okhttp-introduction/" class="title">okHttp3.0入门</a></p>
+                            <p class="item-date"><time datetime="2016-07-10T14:03:58.000Z" itemprop="datePublished">2016-07-10</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">2</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android-unwidget-study/">android-unwidget-study</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android-widget-study/">android-widget-study</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android-开源项目学习/">android-开源项目学习</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android开发工具/">android开发工具</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android第三方接入/">android第三方接入</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/android-unwidget-study/" style="font-size: 10px;">android-unwidget-study</a> <a href="/tags/android-widget-study/" style="font-size: 10px;">android-widget-study</a> <a href="/tags/android-开源项目学习/" style="font-size: 10px;">android-开源项目学习</a> <a href="/tags/android开发工具/" style="font-size: 10px;">android开发工具</a> <a href="/tags/android第三方接入/" style="font-size: 10px;">android第三方接入</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://www.jianshu.com/u/bc439f0553f4">我的简书</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2017 David-zhw<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script>
+    var disqus_config = function () {
+        
+            this.page.url = 'http://yoursite.com/2016/07/10/okhttp-introduction/';
+        
+        this.page.identifier = 'okhttp-introduction';
+    };
+    (function() { 
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'hexo-theme-icarus' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>

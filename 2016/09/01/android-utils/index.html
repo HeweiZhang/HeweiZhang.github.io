@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>android开发中常用的工具类积累 | David&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="主要积累一些开发中比较 常用的工具类，部分借鉴于网络，部分来源于平时开发因需求而生的小工具1、LogUtil12345678910111213141516171819202122232425262728293031323334353637383940414243444546import android.util.Log;/** * LEVEL = VERBOSE时打印所有调试信息 * 当项目上线时">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android开发中常用的工具类积累">
+<meta property="og:url" content="http://yoursite.com/2016/09/01/android-utils/index.html">
+<meta property="og:site_name" content="David's Blog">
+<meta property="og:description" content="主要积累一些开发中比较 常用的工具类，部分借鉴于网络，部分来源于平时开发因需求而生的小工具1、LogUtil12345678910111213141516171819202122232425262728293031323334353637383940414243444546import android.util.Log;/** * LEVEL = VERBOSE时打印所有调试信息 * 当项目上线时">
+<meta property="og:updated_time" content="2017-03-21T07:43:53.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="android开发中常用的工具类积累">
+<meta name="twitter:description" content="主要积累一些开发中比较 常用的工具类，部分借鉴于网络，部分来源于平时开发因需求而生的小工具1、LogUtil12345678910111213141516171819202122232425262728293031323334353637383940414243444546import android.util.Log;/** * LEVEL = VERBOSE时打印所有调试信息 * 当项目上线时">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">David&#39;s Blog</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">Home</a>
+                
+                    <a class="main-nav-link" href="/archives">Archives</a>
+                
+                    <a class="main-nav-link" href="/categories">Categories</a>
+                
+                    <a class="main-nav-link" href="/tags">Tags</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="https://avatars3.githubusercontent.com/u/15151995?v=3&amp;s=40" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">Home</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">Archives</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">Categories</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">Tags</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="https://avatars3.githubusercontent.com/u/15151995?v=3&amp;s=40" />
+            <h2 id="name">heweizhang</h2>
+            <h3 id="title">Android Application Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>XiaMen, China</span>
+            <a id="follow" target="_blank" href="http://www.jianshu.com/u/bc439f0553f4">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                5
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                5
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/heweizhang" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/17505926606@163.com" target="_blank" title="email" class=tooltip>
+                            <i class="fa fa-email"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-android-utils" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            android开发中常用的工具类积累
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2016/09/01/android-utils/">
+            <time datetime="2016-09-01T11:50:25.000Z" itemprop="datePublished">2016-09-01</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/android开发工具/">android开发工具</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+                <div id="toc" class="toc-article">
+                <strong class="toc-title">文章目录</strong>
+                    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#主要积累一些开发中比较-常用的工具类，部分借鉴于网络，部分来源于平时开发因需求而生的小工具"><span class="toc-number">1.</span> <span class="toc-text">主要积累一些开发中比较 常用的工具类，部分借鉴于网络，部分来源于平时开发因需求而生的小工具</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1、LogUtil"><span class="toc-number">2.</span> <span class="toc-text">1、LogUtil</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2、MD5Utils"><span class="toc-number">3.</span> <span class="toc-text">2、MD5Utils</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3、比较常用的正则表达式验证"><span class="toc-number">4.</span> <span class="toc-text">3、比较常用的正则表达式验证</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4、像素相关，获取Android屏幕宽度，控件宽度，dp跟px互转"><span class="toc-number">5.</span> <span class="toc-text">4、像素相关，获取Android屏幕宽度，控件宽度，dp跟px互转</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5、去除double类型数字尾巴的0"><span class="toc-number">6.</span> <span class="toc-text">5、去除double类型数字尾巴的0</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#如：50-00-–-gt-50"><span class="toc-number">6.1.</span> <span class="toc-text">如：50.00 –> 50</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6、时间戳相关"><span class="toc-number">7.</span> <span class="toc-text">6、时间戳相关</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7、文件相关"><span class="toc-number">8.</span> <span class="toc-text">7、文件相关</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8、AlertDialogUtil"><span class="toc-number">9.</span> <span class="toc-text">8、AlertDialogUtil</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9、ToastUtil"><span class="toc-number">10.</span> <span class="toc-text">9、ToastUtil</span></a></li></ol>
+                </div>
+            
+            <h4 id="主要积累一些开发中比较-常用的工具类，部分借鉴于网络，部分来源于平时开发因需求而生的小工具"><a href="#主要积累一些开发中比较-常用的工具类，部分借鉴于网络，部分来源于平时开发因需求而生的小工具" class="headerlink" title="主要积累一些开发中比较 常用的工具类，部分借鉴于网络，部分来源于平时开发因需求而生的小工具"></a>主要积累一些开发中比较 常用的工具类，部分借鉴于网络，部分来源于平时开发因需求而生的小工具</h4><h4 id="1、LogUtil"><a href="#1、LogUtil" class="headerlink" title="1、LogUtil"></a>1、LogUtil</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> android.util.Log;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * LEVEL = VERBOSE时打印所有调试信息</div><div class="line"> * 当项目上线时，改为 LEVEL = NOTHING</div><div class="line"> * 关闭所有打印信息</div><div class="line"> * <span class="doctag">@author</span> 81091</div><div class="line"> *</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LogUtil</span> </span>&#123;</div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> VERBOSE = <span class="number">1</span>;</div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DEBUG = <span class="number">2</span>;</div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> INFO = <span class="number">3</span>;</div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> WARN = <span class="number">4</span>;</div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> ERROR = <span class="number">5</span>;</div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> NOTHING = <span class="number">6</span>;</div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> LEVEL = VERBOSE;<span class="comment">//打印所有等级的信息</span></div><div class="line"><span class="comment">//	public static final int LEVEL = NOTHING;//关闭所有等级的信息</span></div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">v</span><span class="params">(String tag,String msg)</span></span>&#123;</div><div class="line">		<span class="keyword">if</span>(LEVEL &lt;= VERBOSE)&#123;</div><div class="line">			Log.v(tag,msg);</div><div class="line">		&#125;</div><div class="line">	&#125; </div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">d</span><span class="params">(String tag,String msg)</span></span>&#123;</div><div class="line">		<span class="keyword">if</span>(LEVEL &lt;= DEBUG)&#123;</div><div class="line">			Log.d(tag,msg);</div><div class="line">		&#125;</div><div class="line">	&#125; </div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">i</span><span class="params">(String tag,String msg)</span></span>&#123;</div><div class="line">		<span class="keyword">if</span>(LEVEL &lt;= INFO)&#123;</div><div class="line">			Log.i(tag,msg);</div><div class="line">		&#125;</div><div class="line">	&#125; </div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">w</span><span class="params">(String tag,String msg)</span></span>&#123;</div><div class="line">		<span class="keyword">if</span>(LEVEL &lt;= WARN)&#123;</div><div class="line">			Log.w(tag,msg);</div><div class="line">		&#125;</div><div class="line">	&#125; </div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">e</span><span class="params">(String tag,String msg)</span></span>&#123;</div><div class="line">		<span class="keyword">if</span>(LEVEL &lt;= ERROR)&#123;</div><div class="line">			Log.e(tag,msg);</div><div class="line">		&#125;</div><div class="line">	&#125; </div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<h4 id="2、MD5Utils"><a href="#2、MD5Utils" class="headerlink" title="2、MD5Utils"></a>2、MD5Utils</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 32位小写</div><div class="line"> * Created by C5-0 on 2015/7/25.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MD5Utils</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">ecodeTwice</span><span class="params">(String str)</span> </span>&#123;<span class="comment">//MD5两次</span></div><div class="line">        <span class="keyword">return</span> ecode(ecode(str));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">ecode</span><span class="params">(String passwd)</span> </span>&#123;</div><div class="line"></div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            MessageDigest instance = MessageDigest.getInstance(<span class="string">"MD5"</span>);</div><div class="line">            <span class="keyword">byte</span>[] digest = instance.digest(passwd.getBytes());</div><div class="line"></div><div class="line">            StringBuilder sb = <span class="keyword">new</span> StringBuilder();</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">byte</span> b : digest) &#123;</div><div class="line">                <span class="keyword">int</span> i = b &amp; <span class="number">0xff</span>;</div><div class="line">                String hexString = Integer.toHexString(i);</div><div class="line">                <span class="keyword">if</span> (hexString.length() &lt; <span class="number">2</span>) &#123;</div><div class="line">                    hexString = <span class="string">"0"</span> + hexString;</div><div class="line">                &#125;</div><div class="line">                sb.append(hexString);</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">return</span> sb.toString();</div><div class="line">        &#125; <span class="keyword">catch</span> (NoSuchAlgorithmException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> <span class="string">""</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<h4 id="3、比较常用的正则表达式验证"><a href="#3、比较常用的正则表达式验证" class="headerlink" title="3、比较常用的正则表达式验证"></a>3、比较常用的正则表达式验证</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * Created by Administrator on 2016/8/10.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RegularUtils</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">RegularUtils</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> UnsupportedOperationException(<span class="string">"u can't fuck me..."</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 验证手机号（简单）</div><div class="line">     */</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String REGEX_MOBILE_SIMPLE = <span class="string">"^[1]\\d&#123;10&#125;$"</span>;</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 验证手机号（精确）</div><div class="line">     * &lt;p&gt;</div><div class="line">     * &lt;p&gt;移动：134(0-8)、135、136、137、138、139、147、150、151、152、157、158、159、178、182、183、184、187、188</div><div class="line">     * &lt;p&gt;联通：130、131、132、145、155、156、175、176、185、186</div><div class="line">     * &lt;p&gt;电信：133、153、173、177、180、181、189</div><div class="line">     * &lt;p&gt;全球星：1349</div><div class="line">     * &lt;p&gt;虚拟运营商：170</div><div class="line">     */</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String REGEX_MOBILE_EXACT = <span class="string">"^((13[0-9])|(14[5,7])|(15[0-3,5-8])|(17[0,3,5-8])|(18[0-9])|(147))\\d&#123;8&#125;$"</span>;</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 验证座机号,正确格式：xxx/xxxx-xxxxxxx/xxxxxxxx/</div><div class="line">     */</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String REGEX_TEL = <span class="string">"^0\\d&#123;2,3&#125;[- ]?\\d&#123;7,8&#125;"</span>;</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 验证邮箱</div><div class="line">     */</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String REGEX_EMAIL = <span class="string">"^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$"</span>;</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 验证url</div><div class="line">     */</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String REGEX_URL = <span class="string">"http(s)?://([\\w-]+\\.)+[\\w-]+(/[\\w-./?%&amp;=]*)?"</span>;</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 验证汉字</div><div class="line">     */</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String REGEX_CHZ = <span class="string">"^[\\u4e00-\\u9fa5]+$"</span>;</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 验证用户名,取值范围为a-z,A-Z,0-9,"_",汉字，不能以"_"结尾,用户名必须是6-20位</div><div class="line">     */</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String REGEX_USERNAME = <span class="string">"^[\\w\\u4e00-\\u9fa5]&#123;6,20&#125;(?&lt;!_)$"</span>;</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 验证IP地址</div><div class="line">     */</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String REGEX_IP = <span class="string">"((2[0-4]\\d|25[0-5]|[01]?\\d\\d?)\\.)&#123;3&#125;(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)"</span>;</div><div class="line"></div><div class="line">    <span class="comment">//If u want more please visit http://toutiao.com/i6231678548520731137/</span></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * <span class="doctag">@param</span> string 待验证文本</div><div class="line">     * <span class="doctag">@return</span> 是否符合手机号（简单）格式</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isMobileSimple</span><span class="params">(String string)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> isMatch(REGEX_MOBILE_SIMPLE, string);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * <span class="doctag">@param</span> string 待验证文本</div><div class="line">     * <span class="doctag">@return</span> 是否符合手机号（精确）格式</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isMobileExact</span><span class="params">(String string)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> isMatch(REGEX_MOBILE_EXACT, string);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * <span class="doctag">@param</span> string 待验证文本</div><div class="line">     * <span class="doctag">@return</span> 是否符合座机号码格式</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isTel</span><span class="params">(String string)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> isMatch(REGEX_TEL, string);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * <span class="doctag">@param</span> string 待验证文本</div><div class="line">     * <span class="doctag">@return</span> 是否符合邮箱格式</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isEmail</span><span class="params">(String string)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> isMatch(REGEX_EMAIL, string);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * <span class="doctag">@param</span> string 待验证文本</div><div class="line">     * <span class="doctag">@return</span> 是否符合网址格式</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isURL</span><span class="params">(String string)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> isMatch(REGEX_URL, string);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * <span class="doctag">@param</span> string 待验证文本</div><div class="line">     * <span class="doctag">@return</span> 是否符合汉字</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isChz</span><span class="params">(String string)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> isMatch(REGEX_CHZ, string);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * <span class="doctag">@param</span> string 待验证文本</div><div class="line">     * <span class="doctag">@return</span> 是否符合用户名</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isUsername</span><span class="params">(String string)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> isMatch(REGEX_USERNAME, string);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * <span class="doctag">@param</span> regex  正则表达式字符串</div><div class="line">     * <span class="doctag">@param</span> string 要匹配的字符串</div><div class="line">     * <span class="doctag">@return</span> 如果str 符合 regex的正则表达式格式,返回true, 否则返回 false;</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isMatch</span><span class="params">(String regex, String string)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> !TextUtils.isEmpty(string) &amp;&amp; Pattern.matches(regex, string);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<h4 id="4、像素相关，获取Android屏幕宽度，控件宽度，dp跟px互转"><a href="#4、像素相关，获取Android屏幕宽度，控件宽度，dp跟px互转" class="headerlink" title="4、像素相关，获取Android屏幕宽度，控件宽度，dp跟px互转"></a>4、像素相关，获取Android屏幕宽度，控件宽度，dp跟px互转</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PixelUtil</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">//获取运行屏幕宽度</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getScreenWidth</span><span class="params">(Activity context)</span> </span>&#123;</div><div class="line">        DisplayMetrics dm = <span class="keyword">new</span> DisplayMetrics();</div><div class="line">        context.getWindowManager().getDefaultDisplay().getMetrics(dm);</div><div class="line">        <span class="comment">//宽度 dm.widthPixels</span></div><div class="line">        <span class="comment">//高度 dm.heightPixels</span></div><div class="line"><span class="comment">//        LogUtil.i("info", "getScreenWidth" + dm.widthPixels);</span></div><div class="line">        <span class="keyword">return</span> dm.widthPixels;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 获取控件宽</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getWidth</span><span class="params">(View view)</span> </span>&#123;</div><div class="line">        <span class="keyword">int</span> w = View.MeasureSpec.makeMeasureSpec(<span class="number">0</span>, View.MeasureSpec.UNSPECIFIED);</div><div class="line">        <span class="keyword">int</span> h = View.MeasureSpec.makeMeasureSpec(<span class="number">0</span>, View.MeasureSpec.UNSPECIFIED);</div><div class="line">        view.measure(w, h);</div><div class="line">        <span class="keyword">return</span> (view.getMeasuredWidth());</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">//DP转PX</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">dp2px</span><span class="params">(Activity context, <span class="keyword">float</span> dpValue)</span> </span>&#123;</div><div class="line">        <span class="keyword">final</span> <span class="keyword">float</span> scale = context.getResources().getDisplayMetrics().density;</div><div class="line">        <span class="keyword">return</span> (<span class="keyword">int</span>) (dpValue * scale + <span class="number">0.5f</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//PX转DP</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">px2dp</span><span class="params">(Activity context, <span class="keyword">float</span> pxValue)</span> </span>&#123;</div><div class="line">        <span class="keyword">final</span> <span class="keyword">float</span> scale = context.getResources().getDisplayMetrics().density;</div><div class="line">        <span class="keyword">return</span> (<span class="keyword">int</span>) (pxValue / scale + <span class="number">0.5f</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<h4 id="5、去除double类型数字尾巴的0"><a href="#5、去除double类型数字尾巴的0" class="headerlink" title="5、去除double类型数字尾巴的0"></a>5、去除double类型数字尾巴的0</h4><h5 id="如：50-00-–-gt-50"><a href="#如：50-00-–-gt-50" class="headerlink" title="如：50.00 –&gt; 50"></a>如：50.00 –&gt; 50</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MathDataUtil</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> BigDecimal <span class="title">stripTrailingZeros</span><span class="params">(<span class="keyword">double</span> d)</span> </span>&#123;<span class="comment">//去除double尾巴的0</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> BigDecimal(d).stripTrailingZeros();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<h4 id="6、时间戳相关"><a href="#6、时间戳相关" class="headerlink" title="6、时间戳相关"></a>6、时间戳相关</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DateUtils</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> SimpleDateFormat sf;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> SimpleDateFormat sdf;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 获取系统时间 格式为："yyyy/MM/dd "</div><div class="line">     **/</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getCurrentDate</span><span class="params">()</span> </span>&#123;</div><div class="line">        Date d = <span class="keyword">new</span> Date();</div><div class="line">        sf = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy年MM月dd日"</span>);</div><div class="line">        <span class="keyword">return</span> sf.format(d);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 获取系统时间 格式为："yyyy "</div><div class="line">     **/</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getCurrentYear</span><span class="params">()</span> </span>&#123;</div><div class="line">        Date d = <span class="keyword">new</span> Date();</div><div class="line">        sf = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy"</span>);</div><div class="line">        <span class="keyword">return</span> sf.format(d);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 获取系统时间 格式为："MM"</div><div class="line">     **/</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getCurrentMonth</span><span class="params">()</span> </span>&#123;</div><div class="line">        Date d = <span class="keyword">new</span> Date();</div><div class="line">        sf = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"MM"</span>);</div><div class="line">        <span class="keyword">return</span> sf.format(d);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 获取系统时间 格式为："dd"</div><div class="line">     **/</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getCurrentDay</span><span class="params">()</span> </span>&#123;</div><div class="line">        Date d = <span class="keyword">new</span> Date();</div><div class="line">        sf = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"dd"</span>);</div><div class="line">        <span class="keyword">return</span> sf.format(d);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 获取当前时间戳</div><div class="line">     *</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">long</span> <span class="title">getCurrentTime</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">long</span> d = <span class="keyword">new</span> Date().getTime() / <span class="number">1000</span>;</div><div class="line">        <span class="keyword">return</span> d;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 时间戳转换成字符窜</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getDateToString</span><span class="params">(<span class="keyword">long</span> time)</span> </span>&#123;</div><div class="line">        Date d = <span class="keyword">new</span> Date(time * <span class="number">1000</span>);</div><div class="line">        sf = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy年MM月dd日"</span>);</div><div class="line">        <span class="keyword">return</span> sf.format(d);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 时间戳中获取年</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getYearFromTime</span><span class="params">(<span class="keyword">long</span> time)</span> </span>&#123;</div><div class="line">        Date d = <span class="keyword">new</span> Date(time * <span class="number">1000</span>);</div><div class="line">        sf = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy"</span>);</div><div class="line">        <span class="keyword">return</span> sf.format(d);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 时间戳中获取月</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getMonthFromTime</span><span class="params">(<span class="keyword">long</span> time)</span> </span>&#123;</div><div class="line">        Date d = <span class="keyword">new</span> Date(time * <span class="number">1000</span>);</div><div class="line">        sf = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"MM"</span>);</div><div class="line">        <span class="keyword">return</span> sf.format(d);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 时间戳中获取日</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getDayFromTime</span><span class="params">(<span class="keyword">long</span> time)</span> </span>&#123;</div><div class="line">        Date d = <span class="keyword">new</span> Date(time * <span class="number">1000</span>);</div><div class="line">        sf = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"dd"</span>);</div><div class="line">        <span class="keyword">return</span> sf.format(d);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 将字符串转为时间戳</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">long</span> <span class="title">getStringToDate</span><span class="params">(String time)</span> </span>&#123;</div><div class="line">        sdf = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy年MM月dd日"</span>);</div><div class="line">        Date date = <span class="keyword">new</span> Date();</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            date = sdf.parse(time);</div><div class="line">        &#125; <span class="keyword">catch</span> (ParseException e) &#123;</div><div class="line">            <span class="comment">// TODO Auto-generated catch block</span></div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> date.getTime();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<h4 id="7、文件相关"><a href="#7、文件相关" class="headerlink" title="7、文件相关"></a>7、文件相关</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FileUtils</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String SDPATH = Environment.getExternalStorageDirectory() + <span class="string">"/formats/"</span>;<span class="comment">// 获取文件夹</span></div><div class="line">    <span class="comment">// 保存图片</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">saveBitmap</span><span class="params">(Bitmap mBitmap, String path, String imgName)</span> </span>&#123;</div><div class="line">        String sdStatus = Environment.getExternalStorageState();</div><div class="line">        <span class="keyword">if</span> (!sdStatus.equals(Environment.MEDIA_MOUNTED)) &#123; <span class="comment">// 检测sd是否可用</span></div><div class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">        &#125;</div><div class="line">        FileOutputStream b = <span class="keyword">null</span>;</div><div class="line">        File file = <span class="keyword">new</span> File(path);</div><div class="line">        file.mkdirs();<span class="comment">// 创建文件夹</span></div><div class="line">        String fileName = path + imgName;</div><div class="line"><span class="comment">//        delFile(path, imgName);//删除本地旧图</span></div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            b = <span class="keyword">new</span> FileOutputStream(fileName);</div><div class="line">            mBitmap.compress(Bitmap.CompressFormat.JPEG, <span class="number">100</span>, b);<span class="comment">// 把数据写入文件</span></div><div class="line">        &#125; <span class="keyword">catch</span> (FileNotFoundException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                    b.flush();</div><div class="line">                    b.close();</div><div class="line"></div><div class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line"></div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> File <span class="title">createSDDir</span><span class="params">(String dirName)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">        File dir = <span class="keyword">new</span> File(SDPATH + dirName);</div><div class="line">        <span class="keyword">if</span> (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) &#123;</div><div class="line"></div><div class="line">            System.out.println(<span class="string">"createSDDir:"</span> + dir.getAbsolutePath());</div><div class="line">            System.out.println(<span class="string">"createSDDir:"</span> + dir.mkdir());</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> dir;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isFileExist</span><span class="params">(String fileName)</span> </span>&#123;</div><div class="line">        File file = <span class="keyword">new</span> File(SDPATH + fileName);</div><div class="line">        file.isFile();</div><div class="line">        <span class="keyword">return</span> file.exists();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 删除文件</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">delFile</span><span class="params">(String path, String fileName)</span> </span>&#123;</div><div class="line">        File file = <span class="keyword">new</span> File(path + fileName);</div><div class="line">        <span class="keyword">if</span> (file.isFile()) &#123;</div><div class="line">            file.delete();</div><div class="line">        &#125;</div><div class="line">        file.exists();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 删除文件夹和文件夹里面的文件</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">deleteDir</span><span class="params">()</span> </span>&#123;</div><div class="line">        File dir = <span class="keyword">new</span> File(SDPATH);</div><div class="line">        <span class="keyword">if</span> (dir == <span class="keyword">null</span> || !dir.exists() || !dir.isDirectory())</div><div class="line">            <span class="keyword">return</span>;</div><div class="line"></div><div class="line">        <span class="keyword">for</span> (File file : dir.listFiles()) &#123;</div><div class="line">            <span class="keyword">if</span> (file.isFile())</div><div class="line">                file.delete(); <span class="comment">// 删除所有文件</span></div><div class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (file.isDirectory())</div><div class="line">                deleteDir(); <span class="comment">// 递规的方式删除文件夹</span></div><div class="line">        &#125;</div><div class="line">        dir.delete();<span class="comment">// 删除目录本身</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">fileIsExists</span><span class="params">(String path)</span> </span>&#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            File f = <span class="keyword">new</span> File(path);</div><div class="line">            <span class="keyword">if</span> (!f.exists()) &#123;</div><div class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line"></div><div class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<h4 id="8、AlertDialogUtil"><a href="#8、AlertDialogUtil" class="headerlink" title="8、AlertDialogUtil"></a>8、AlertDialogUtil</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * Created by david on 2016/8/26.</div><div class="line"> *</div><div class="line"> * 使用观察者模式来实现确定结果回调</div><div class="line"> *</div><div class="line"> * 调用方式：</div><div class="line"> * AlertDialogUtil dialogUtil = new AlertDialogUtil(context);</div><div class="line"> * dialogUtil.showDialog("确定删除已上传的图片？");</div><div class="line"> * dialogUtil.setDialogPositiveButtonListener(new AlertDialogUtil.DialogPositiveButtonListener() &#123;</div><div class="line"> *</div><div class="line"> *      <span class="doctag">@Override</span></div><div class="line"> *     public void setDialogPositiveButtonListener() &#123;</div><div class="line"> *</div><div class="line"> *    &#125;</div><div class="line"> * &#125;);</div><div class="line"></div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AlertDialogUtil</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> Context context;</div><div class="line">    <span class="keyword">private</span> DialogPositiveButtonListener listener;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">AlertDialogUtil</span><span class="params">(Context context)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.context = context;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">showDialog</span><span class="params">(String message)</span> </span>&#123;</div><div class="line">        AlertDialog.Builder dialog = <span class="keyword">new</span> AlertDialog.Builder(context);</div><div class="line">        dialog.setMessage(message);</div><div class="line">        dialog.setCancelable(<span class="keyword">false</span>);<span class="comment">//点击框外取消</span></div><div class="line">        dialog.setPositiveButton(<span class="string">"确定"</span>, <span class="keyword">new</span> DialogInterface.OnClickListener() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(DialogInterface dialogInterface, <span class="keyword">int</span> i)</span> </span>&#123;</div><div class="line">                <span class="keyword">if</span> (listener != <span class="keyword">null</span>) &#123;</div><div class="line">                    listener.setDialogPositiveButtonListener();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">        &#125;);</div><div class="line">        dialog.setNegativeButton(<span class="string">"取消"</span>, <span class="keyword">null</span>);</div><div class="line">        dialog.show();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setDialogPositiveButtonListener</span><span class="params">(DialogPositiveButtonListener listener)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.listener = listener;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">DialogPositiveButtonListener</span> </span>&#123;</div><div class="line">        <span class="function"><span class="keyword">void</span> <span class="title">setDialogPositiveButtonListener</span><span class="params">()</span></span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<h4 id="9、ToastUtil"><a href="#9、ToastUtil" class="headerlink" title="9、ToastUtil"></a>9、ToastUtil</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ToastUtils</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> Toast toast;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">ToastUtils</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> AssertionError();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">(Context paramContext, <span class="keyword">int</span> paramInt)</span> </span>&#123;</div><div class="line">        show(paramContext, paramContext.getResources().getText(paramInt), <span class="number">0</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">(Context paramContext, <span class="keyword">int</span> paramInt1, <span class="keyword">int</span> paramInt2)</span> </span>&#123;</div><div class="line">        show(paramContext, paramContext.getResources().getText(paramInt1), paramInt2);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">(Context paramContext, CharSequence paramCharSequence)</span> </span>&#123;</div><div class="line">        show(paramContext, paramCharSequence, <span class="number">0</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">(Context paramContext, CharSequence paramCharSequence, <span class="keyword">int</span> paramInt)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (toast != <span class="keyword">null</span>) &#123;</div><div class="line">            toast.setText(paramCharSequence);</div><div class="line">            toast.setDuration(paramInt);</div><div class="line">            toast.show();<span class="comment">//</span></div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;</div><div class="line">        toast = Toast.makeText(paramContext, paramCharSequence, paramInt);</div><div class="line">        toast.show();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">toastCancle</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (toast != <span class="keyword">null</span>)</div><div class="line">            toast.cancel();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://yoursite.com/2016/09/01/android-utils/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="http://yoursite.com/2016/09/01/android-utils/">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2016/09/07/wxpay-notes/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    关于Android接入微信支付
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2016/07/15/SwipeLayout/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">androidv4包下拉刷新布局SwipeRefreshLayout</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+</section>
+            
+                <aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/09/13/wifi-dev/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2016/09/13/wifi-dev/" class="title">android Wifi 相关</a></p>
+                            <p class="item-date"><time datetime="2016-09-13T15:05:02.000Z" itemprop="datePublished">2016-09-13</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/09/07/wxpay-notes/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2016/09/07/wxpay-notes/" class="title">关于Android接入微信支付</a></p>
+                            <p class="item-date"><time datetime="2016-09-07T13:13:50.000Z" itemprop="datePublished">2016-09-07</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/09/01/android-utils/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2016/09/01/android-utils/" class="title">android开发中常用的工具类积累</a></p>
+                            <p class="item-date"><time datetime="2016-09-01T11:50:25.000Z" itemprop="datePublished">2016-09-01</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/07/15/SwipeLayout/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2016/07/15/SwipeLayout/" class="title">androidv4包下拉刷新布局SwipeRefreshLayout</a></p>
+                            <p class="item-date"><time datetime="2016-07-15T12:09:32.000Z" itemprop="datePublished">2016-07-15</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/07/10/okhttp-introduction/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2016/07/10/okhttp-introduction/" class="title">okHttp3.0入门</a></p>
+                            <p class="item-date"><time datetime="2016-07-10T14:03:58.000Z" itemprop="datePublished">2016-07-10</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">2</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android-unwidget-study/">android-unwidget-study</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android-widget-study/">android-widget-study</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android-开源项目学习/">android-开源项目学习</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android开发工具/">android开发工具</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android第三方接入/">android第三方接入</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/android-unwidget-study/" style="font-size: 10px;">android-unwidget-study</a> <a href="/tags/android-widget-study/" style="font-size: 10px;">android-widget-study</a> <a href="/tags/android-开源项目学习/" style="font-size: 10px;">android-开源项目学习</a> <a href="/tags/android开发工具/" style="font-size: 10px;">android开发工具</a> <a href="/tags/android第三方接入/" style="font-size: 10px;">android第三方接入</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://www.jianshu.com/u/bc439f0553f4">我的简书</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2017 David-zhw<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script>
+    var disqus_config = function () {
+        
+            this.page.url = 'http://yoursite.com/2016/09/01/android-utils/';
+        
+        this.page.identifier = 'android-utils';
+    };
+    (function() { 
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'hexo-theme-icarus' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
