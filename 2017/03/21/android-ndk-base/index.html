@@ -3,20 +3,41 @@
 <head>
     <meta charset="utf-8">
     
-    <title>android studio 下使用SlidingMenu侧滑菜单 | David&#39;s Blog</title>
+    <title>Android Studio之NDK环境搭建，so文件打包以及使用 | David&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="项目中需要使用到侧滑菜单，由于一直有点抵触使用第三方库，因为大部分库为了兼容各种需求，封装得大都比较笨重，所以就在网上找有没有自己写的自定义侧滑菜单，还真被我找到了史上最简单粗暴实现侧滑菜单 ，使用这个自定义的SlideMenu确实很轻松的给项目集成了侧滑菜单，然后却存在一些问题，比如我的主页中用到viewpager来实现广告控件，当我拉出侧滑菜单时，由于主页广告bannerView自动切换，我猜">
+    <meta name="description" content="关于ndk，jni的介绍请自行谷歌、百度。推荐查看网友的ndk系列文章，写的较为详细，深入Android NDK开发（该系列教程开发环境为win + Eclipse）
+本篇入门教程开发环境为mac + Android Studio + gradle 2.14.1，主要包含以下3块内容：
+NDK环境搭建
+编写第一个JNI项目
+打包出动态so文件，在其他项目中使用
+
+一、NDK环境搭建
+从Androi">
 <meta property="og:type" content="article">
-<meta property="og:title" content="android studio 下使用SlidingMenu侧滑菜单">
-<meta property="og:url" content="http://hwzhang.top/2017/03/21/SlidingMenu/index.html">
+<meta property="og:title" content="Android Studio之NDK环境搭建，so文件打包以及使用">
+<meta property="og:url" content="http://hwzhang.top/2017/03/21/android-ndk-base/index.html">
 <meta property="og:site_name" content="David's Blog">
-<meta property="og:description" content="项目中需要使用到侧滑菜单，由于一直有点抵触使用第三方库，因为大部分库为了兼容各种需求，封装得大都比较笨重，所以就在网上找有没有自己写的自定义侧滑菜单，还真被我找到了史上最简单粗暴实现侧滑菜单 ，使用这个自定义的SlideMenu确实很轻松的给项目集成了侧滑菜单，然后却存在一些问题，比如我的主页中用到viewpager来实现广告控件，当我拉出侧滑菜单时，由于主页广告bannerView自动切换，我猜">
-<meta property="og:image" content="http://o930uobjh.bkt.clouddn.com/WX20170309-164649@2x.png">
-<meta property="og:updated_time" content="2017-03-21T13:09:40.000Z">
+<meta property="og:description" content="关于ndk，jni的介绍请自行谷歌、百度。推荐查看网友的ndk系列文章，写的较为详细，深入Android NDK开发（该系列教程开发环境为win + Eclipse）
+本篇入门教程开发环境为mac + Android Studio + gradle 2.14.1，主要包含以下3块内容：
+NDK环境搭建
+编写第一个JNI项目
+打包出动态so文件，在其他项目中使用
+
+一、NDK环境搭建
+从Androi">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2510928-69ba6a978248728a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-03-21T13:19:49.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="android studio 下使用SlidingMenu侧滑菜单">
-<meta name="twitter:description" content="项目中需要使用到侧滑菜单，由于一直有点抵触使用第三方库，因为大部分库为了兼容各种需求，封装得大都比较笨重，所以就在网上找有没有自己写的自定义侧滑菜单，还真被我找到了史上最简单粗暴实现侧滑菜单 ，使用这个自定义的SlideMenu确实很轻松的给项目集成了侧滑菜单，然后却存在一些问题，比如我的主页中用到viewpager来实现广告控件，当我拉出侧滑菜单时，由于主页广告bannerView自动切换，我猜">
-<meta name="twitter:image" content="http://o930uobjh.bkt.clouddn.com/WX20170309-164649@2x.png">
+<meta name="twitter:title" content="Android Studio之NDK环境搭建，so文件打包以及使用">
+<meta name="twitter:description" content="关于ndk，jni的介绍请自行谷歌、百度。推荐查看网友的ndk系列文章，写的较为详细，深入Android NDK开发（该系列教程开发环境为win + Eclipse）
+本篇入门教程开发环境为mac + Android Studio + gradle 2.14.1，主要包含以下3块内容：
+NDK环境搭建
+编写第一个JNI项目
+打包出动态so文件，在其他项目中使用
+
+一、NDK环境搭建
+从Androi">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2510928-69ba6a978248728a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
     
 
     
@@ -193,7 +214,7 @@
 </aside>
 
             
-            <section id="main"><article id="post-SlidingMenu" class="article article-type-post" itemscope itemprop="blogPost">
+            <section id="main"><article id="post-android-ndk-base" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
         
@@ -201,7 +222,7 @@
                 
     
         <h1 class="article-title" itemprop="name">
-            android studio 下使用SlidingMenu侧滑菜单
+            Android Studio之NDK环境搭建，so文件打包以及使用
         </h1>
     
 
@@ -210,8 +231,8 @@
                         
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/2017/03/21/SlidingMenu/">
-            <time datetime="2017-03-21T12:47:00.000Z" itemprop="datePublished">2017-03-21</time>
+        <a href="/2017/03/21/android-ndk-base/">
+            <time datetime="2017-03-21T14:12:33.000Z" itemprop="datePublished">2017-03-21</time>
         </a>
     </div>
 
@@ -220,7 +241,7 @@
                         
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/android第三方接入/">android第三方接入</a>
+        <a class="tag-link" href="/tags/NDK、JNI/">NDK、JNI</a>
     </div>
 
                     </div>
@@ -231,27 +252,76 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-            <p><em>项目中需要使用到侧滑菜单，由于一直有点抵触使用第三方库，因为大部分库为了兼容各种需求，封装得大都比较笨重，所以就在网上找有没有自己写的自定义侧滑菜单，还真被我找到了<a href="http://www.jianshu.com/p/8bd7f7f88890" target="_blank" rel="external">史上最简单粗暴实现侧滑菜单</a> ，使用这个自定义的SlideMenu确实很轻松的给项目集成了侧滑菜单，然后却存在一些问题，比如我的主页中用到viewpager来实现广告控件，当我拉出侧滑菜单时，由于主页广告bannerView自动切换，我猜想是否是由于焦点问题，这样导致侧滑菜单自动执行了menu.close()操作，体验实在太差 ，不能忍。一开始的解决办法是当侧滑菜单滑出时，暂停bannerView自动切换，虽然有点取巧，但还是解决了那个问题。但是经理要求带滑出动画，以及淡入淡出的效果。时间紧迫，想想还是先把它放下，研究了一下大名鼎鼎的侧滑菜单：<a href="https://github.com/jfeinstein10/SlidingMenu" target="_blank" rel="external">SlidingMenu框架</a></em></p>
-<h3 id="接入过程还是碰到了一些小问题，花了些时间，就此简单记录一下"><a href="#接入过程还是碰到了一些小问题，花了些时间，就此简单记录一下" class="headerlink" title="接入过程还是碰到了一些小问题，花了些时间，就此简单记录一下"></a>接入过程还是碰到了一些小问题，花了些时间，就此简单记录一下</h3><p>1、 查了下github，该项目好像不支持compile 方式从maven仓库添加，那就从<a href="https://github.com/jfeinstein10/SlidingMenu" target="_blank" rel="external">github</a>上面clone下项目,找到library项目<br>2、 打开项目配置：Project Structure –&gt; 左上角加号 –&gt; import gradle project –&gt; 找到对应library（最好改名为slidingMenu，以便一眼可以看出该库）<br>3、 同样在Project Structure中添加Depenencies,添加对该项目的引用，或者可以通过moudle下的gradle文件中加入:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">compile project(&apos;:slidingMenu&apos;)</div></pre></td></tr></table></figure>
-<p>4、 修改slidingMenu gradle文件，大致如下，sdk版本按主项目修改：<br><img src="http://o930uobjh.bkt.clouddn.com/WX20170309-164649@2x.png" alt="修改slidingMenu gradle文件"></p>
-<h4 id="如上算是把library成功导入了主项目，接着开始使用slidingMenu"><a href="#如上算是把library成功导入了主项目，接着开始使用slidingMenu" class="headerlink" title="如上算是把library成功导入了主项目，接着开始使用slidingMenu"></a>如上算是把library成功导入了主项目，接着开始使用slidingMenu</h4><ul>
-<li><p>activity_main.xml布局如下：(slidingMenu里面包含项目主页，左侧菜单栏不放入其中)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">  &lt;com.jeremyfeinstein.slidingmenu.lib.SlidingMenu xmlns:sliding=&quot;http://schemas.android.com/apk/res-auto&quot;</div><div class="line">        android:id=&quot;@+id/slidingMenu&quot;</div><div class="line">        android:layout_width=&quot;fill_parent&quot;</div><div class="line">        android:layout_height=&quot;fill_parent&quot;&gt;</div><div class="line"></div><div class="line">        &lt;include layout=&quot;@layout/activity_main&quot; /&gt;</div><div class="line">&lt;/com.jeremyfeinstein.slidingmenu.lib.SlidingMenu&gt;</div></pre></td></tr></table></figure>
+            <p><em>关于ndk，jni的介绍请自行谷歌、百度。推荐查看网友的ndk系列文章，写的较为详细，深入<a href="http://blog.csdn.net/mynameishuangshuai/article/details/52624269" target="_blank" rel="external">Android NDK开发</a>（该系列教程开发环境为win + Eclipse）</em></p>
+<h3 id="本篇入门教程开发环境为mac-Android-Studio-gradle-2-14-1，主要包含以下3块内容："><a href="#本篇入门教程开发环境为mac-Android-Studio-gradle-2-14-1，主要包含以下3块内容：" class="headerlink" title="本篇入门教程开发环境为mac + Android Studio + gradle 2.14.1，主要包含以下3块内容："></a>本篇入门教程开发环境为mac + Android Studio + gradle 2.14.1，主要包含以下3块内容：</h3><ul>
+<li>NDK环境搭建</li>
+<li>编写第一个JNI项目</li>
+<li>打包出动态so文件，在其他项目中使用</li>
+</ul>
+<h4 id="一、NDK环境搭建"><a href="#一、NDK环境搭建" class="headerlink" title="一、NDK环境搭建"></a>一、NDK环境搭建</h4><ol>
+<li>从Android Studio安装(自行翻墙)<br>打开AndroidStudio，选择顶部工具条，Tools-&gt;Android-&gt;SDK Manager-&gt;SDK Tools-&gt;NDK 点击install</li>
+<li><p>自行下载ndk包<br>1）国内推荐通过<a href="http://www.androiddevtools.cn/" target="_blank" rel="external">AndroidDevTools镜像</a>下载，或者Google的官方网站下载Android NDK的安装包<a href="https://developer.android.com/ndk/downloads/index.html" target="_blank" rel="external">https://developer.android.com/ndk/downloads/index.html</a></p>
+<p> <img src="http://upload-images.jianshu.io/upload_images/2510928-69ba6a978248728a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="NDK r13b"></p>
+<p>2）下载ndk包后解析到某个路径，打开Project Structure-&gt;设置 NDK location</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2510928-8d37269c2cffd5e1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="AndroidDevTools 下载"></p>
 </li>
-<li><p>MainActivity.java</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">protected void onCreate(Bundle savedInstanceState) &#123;</div><div class="line">        super.onCreate(savedInstanceState);</div><div class="line">        setContentView(R.layout.activity_main);</div><div class="line">   </div><div class="line">        slidingMenu = new SlidingMenu(this);//创建对象</div><div class="line">        slidingMenu.setMode(SlidingMenu.LEFT);//设定模式，SlidingMenu在左边</div><div class="line">        slidingMenu.setBehindOffsetRes(R.dimen.sliding_menu_offset);//配置slidingmenu偏移出来的尺寸</div><div class="line">        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);//全屏都可以拖拽触摸，打开slidingmenu</div><div class="line">        slidingMenu.attachToActivity(this,SlidingMenu.SLIDING_CONTENT);//附加到当前的activity上去</div><div class="line">        leftView = inflate(this, R.layout.drawable_tab, null);</div><div class="line">        slidingMenu.setMenu(leftView);//也可以直接跟layout id</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<li>ndk环境变量配置，我们需要使用到ndk-build命令<br> 打开终端 -&gt; 输入 ：vim ~/.bash_profile -&gt; 加入ndk 包的路径(mac中环境变量之间以封号隔开)</li>
+</ol>
+<p>自此，ndk开发环境我们已经可以进行jni开发了</p>
+<h4 id="二、JNI开发"><a href="#二、JNI开发" class="headerlink" title="二、JNI开发"></a>二、JNI开发</h4><ol>
+<li>创建android项目</li>
+<li><p>查看项目local.properties中加入ndk和sdk的路径是否正确</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ndk.dir=/Users/userName/AndroidStudioProjects/ndk/android-ndk-r13b</div><div class="line">sdk.dir=/Users/userName/Library/Android/sdk</div></pre></td></tr></table></figure>
 </li>
-<li><p>menu开关操作</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">menu.toggle();// 动态判断自动关闭或开启SlidingMenu   </div><div class="line">menu.showContent();// 显示内容</div><div class="line">menu.showMenu();// 显示SlidingMenu</div></pre></td></tr></table></figure>
+<li><p>配置项目下的gradle.properties文件，表示我们要使用NDK进行开发。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">android.useDeprecatedNdk=true</div></pre></td></tr></table></figure>
 </li>
-<li><p>大部分情况下还是需要对左侧菜单栏布局进行操作的，监听的话就通过上面的leftView来查找指定的view。 </p>
+<li><p>在moudle根目录下的的build.gradle中的defaultConfig标签内部里加入如下代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">ndk&#123;    </div><div class="line">   moduleName &quot;hello&quot;       //生成的so文件名字，调用C程序的代码中会用到该名字    </div><div class="line">   abiFilters &quot;armeabi&quot;, &quot;armeabi-v7a&quot;, &quot;x86&quot; //输出指定三种平台下的so库,</div><div class="line">   // 还可以添加 &apos;x86_64&apos;, &apos;mips&apos;, &apos;mips64&apos;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 </li>
-<li><p>menu开关监听</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">// 监听menu打开  </div><div class="line">menu.setOnOpenedListener(new OnOpenedListener() &#123;  </div><div class="line">    @Override  </div><div class="line">    public void onOpened() &#123;  </div><div class="line">    &#125;  </div><div class="line">&#125;);  </div><div class="line">// 监听menu关闭  </div><div class="line">menu.setOnClosedListener(new OnClosedListener() &#123;  </div><div class="line">    @Override  </div><div class="line">    public void onClosed() &#123;  </div><div class="line">    &#125;  </div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<li><p>编写jni代码   </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">package com.david.ndktest;</div><div class="line">-</div><div class="line">public class MainActivity extends AppCompatActivity &#123;</div><div class="line"></div><div class="line">    //使用静态代码块，表示我们要加载的资源文件为libsecret.so</div><div class="line">    static &#123;</div><div class="line">        System.loadLibrary(&quot;secret&quot;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</div><div class="line">        super.onCreate(savedInstanceState);</div><div class="line">        setContentView(R.layout.activity_main);</div><div class="line">        TextView tv_msg = (TextView) findViewById(R.id.tv_msg);</div><div class="line">        tv_msg.setText(stringFromat());</div><div class="line"></div><div class="line">    &#125;</div><div class="line">    //声明一个本地方法，用native关键字修饰</div><div class="line">    public native String stringFromat();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>生成.h头文件<br>直接使用Android Studio 底部的Terminal，默认命令行窗口路径已经在当前项目，进入到app/src/main/java目录，输入以下命令（固定格式：javah -jni 包名+类名）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">javah -jni com.david.ndktest.MainActivity</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>为在对应包的根目录下生成.h文件，熟悉该函数名后，日常开发中可以不用生成.h文件<img src="http://upload-images.jianshu.io/upload_images/2510928-21d455358eddf978.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="生成头文件"></p>
+<ol>
+<li><p>执行第5部的时候，对应native会提示找不到对应方法，快捷键 alt+enter 会生成对应jni文件夹，包含libName.c文件，此处MainActivity中的native方法还是会显示红色，但是不影响编译<br><img src="http://upload-images.jianshu.io/upload_images/2510928-ac8cd0c189cf7315.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="生成.c文件"></p>
+</li>
+<li><p>编译项目后会发现app/build中已经生成so文件，并且已经对应的cpu包就是我们在gradle中已经配置的,并且已经调用成功</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2510928-828a92c9b00a5e2a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="build中生成对应so文件">  </p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2510928-39a7b4f4ec0cbec7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="成功调用native方法"></p>
+</li>
+</ol>
+<p>自此我们的第一个JNI项目已经编写完毕</p>
+<h4 id="三、打包出动态so文件，在其他项目中使用"><a href="#三、打包出动态so文件，在其他项目中使用" class="headerlink" title="三、打包出动态so文件，在其他项目中使用"></a>三、打包出动态so文件，在其他项目中使用</h4><p>   有时候我们的需求是这样的，我们把一些比较重要的业务逻辑封装到ndk内部，对java层只暴露接口。我们就需要打包出so文件，并且可能需要在其他项目中使用，下面将介绍so（符合JNI标准）文件的打包，以及在其他项目中如何正确的调用</p>
+<ul>
+<li>编写Android.mk文件，放到jni文件夹根目录，与.c文件同级</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">LOCAL_PATH := $(call my-dir)</div><div class="line">include $(CLEAR_VARS)</div><div class="line">LOCAL_MODULE := secret <span class="comment">//lib 名</span></div><div class="line">LOCAL_SRC_FILES := \</div><div class="line">	/Users/userName/AndroidStudioProjects/NdkTest/app/src/main/jni/secret.c \ <span class="comment">//.c文件名</span></div><div class="line"></div><div class="line">include $(BUILD_SHARED_LIBRARY)</div></pre></td></tr></table></figure>
+<ul>
+<li><p>使用ndk-build命令（需要配置ndk环境变量，参照第一步第3点），生成so文件  </p>
+<p> 进入到main目录后在terminal中输入命令，ndk-build工具便会帮我们打包出所有cpu平台so文件（目前不知道如何设置需要打包cpu平台）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ndk-build</div></pre></td></tr></table></figure>
 </li>
 </ul>
-<h3 id="自此已经将slidingMenu接入项目并且使用起来，后续需要找时间研究一下源码"><a href="#自此已经将slidingMenu接入项目并且使用起来，后续需要找时间研究一下源码" class="headerlink" title="自此已经将slidingMenu接入项目并且使用起来，后续需要找时间研究一下源码"></a>自此已经将slidingMenu接入项目并且使用起来，后续需要找时间研究一下源码</h3>
+<p><img src="http://upload-images.jianshu.io/upload_images/2510928-c839afa7a3545010.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="building so文件"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2510928-9e5236382bfd74ac.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="main根目录下生成lib，obj目录"></p>
+<ul>
+<li>其他项目中使用该so文件<ul>
+<li>拷贝so文件到项目的main/jniLibs目录</li>
+<li>==新建package，包名与类名以及方法名必须与生成so文件的类保持一致！==</li>
+<li>使用方法与第二部一致，需要声明loadLibrary与native方法<br><img src="http://upload-images.jianshu.io/upload_images/2510928-b96ee367851104db.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="">  </li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>调用native方法<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">com.keywea.duolintest;</div><div class="line">-</div><div class="line">public class MainActivity extends AppCompatActivity &#123;</div><div class="line">    @Override</div><div class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</div><div class="line">        super.onCreate(savedInstanceState);</div><div class="line">        setContentView(R.layout.activity_main);</div><div class="line">        TextView tv_msg = (TextView) findViewById(R.id.tv_msg);</div><div class="line">        tv_msg.setText(com.david.ndktest.MainActivity.stringFromat());</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="自此我们已经能够接入符合JNI标准的so库，重点在于包名，类名，方法名需要与so库保持一致，因此我们在提供so库的时候一定要记录详细的交互文档"><a href="#自此我们已经能够接入符合JNI标准的so库，重点在于包名，类名，方法名需要与so库保持一致，因此我们在提供so库的时候一定要记录详细的交互文档" class="headerlink" title="自此我们已经能够接入符合JNI标准的so库，重点在于包名，类名，方法名需要与so库保持一致，因此我们在提供so库的时候一定要记录详细的交互文档"></a>自此我们已经能够接入符合JNI标准的so库，重点在于包名，类名，方法名需要与so库保持一致，因此我们在提供so库的时候一定要记录详细的交互文档</h3>
         
         </div>
         <footer class="article-footer">
@@ -298,7 +368,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 
             
     
-        <a href="http://hwzhang.top/2017/03/21/SlidingMenu/#comments" class="article-comment-link ds-thread-count" data-thread-key="http://hwzhang.top/2017/03/21/SlidingMenu/">评论</a>
+        <a href="http://hwzhang.top/2017/03/21/android-ndk-base/#comments" class="article-comment-link ds-thread-count" data-thread-key="http://hwzhang.top/2017/03/21/android-ndk-base/">评论</a>
     
 
         </footer>
@@ -307,19 +377,10 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
 <nav id="article-nav">
     
-        <a href="/2017/03/21/sqlite-greendao3/" id="article-nav-newer" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">上一篇</strong>
-            <div class="article-nav-title">
-                
-                    greenDAO3 入门（配置，基本操作，数据库升级）
-                
-            </div>
-        </a>
     
-    
-        <a href="/2017/03/21/RecyclerView-multiple-item-type/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2017/03/21/sqlite-greendao3/" id="article-nav-older" class="article-nav-link-wrap">
             <strong class="article-nav-caption">下一篇</strong>
-            <div class="article-nav-title">RecyclerView 多布局，Item中使用EditText刷新问题扫坑</div>
+            <div class="article-nav-title">greenDAO3 入门（配置，基本操作，数据库升级）</div>
         </a>
     
 </nav>
@@ -333,7 +394,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <section id="comments">
     
         
-    <div class="ds-thread" data-thread-key="2017/03/21/SlidingMenu/" data-title="android studio 下使用SlidingMenu侧滑菜单" data-url="http://hwzhang.top/2017/03/21/SlidingMenu/"></div>
+    <div class="ds-thread" data-thread-key="2017/03/21/android-ndk-base/" data-title="Android Studio之NDK环境搭建，so文件打包以及使用" data-url="http://hwzhang.top/2017/03/21/android-ndk-base/"></div>
     <style>
         #ds-thread #ds-reset .ds-textarea-wrapper {
             background: none;

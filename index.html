@@ -147,11 +147,11 @@
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                7
+                9
                 <span>文章</span>
             </div>
             <div class="article-info-block">
-                5
+                7
                 <span>标签</span>
             </div>
         </div>
@@ -188,6 +188,330 @@
 
             
             <section id="main">
+    <article id="post-android-ndk-base" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2017/03/21/android-ndk-base/">Android Studio之NDK环境搭建，so文件打包以及使用</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/03/21/android-ndk-base/">
+            <time datetime="2017-03-21T14:12:33.000Z" itemprop="datePublished">2017-03-21</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/NDK、JNI/">NDK、JNI</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p><em>关于ndk，jni的介绍请自行谷歌、百度。推荐查看网友的ndk系列文章，写的较为详细，深入<a href="http://blog.csdn.net/mynameishuangshuai/article/details/52624269" target="_blank" rel="external">Android NDK开发</a>（该系列教程开发环境为win + Eclipse）</em></p>
+<h3 id="本篇入门教程开发环境为mac-Android-Studio-gradle-2-14-1，主要包含以下3块内容："><a href="#本篇入门教程开发环境为mac-Android-Studio-gradle-2-14-1，主要包含以下3块内容：" class="headerlink" title="本篇入门教程开发环境为mac + Android Studio + gradle 2.14.1，主要包含以下3块内容："></a>本篇入门教程开发环境为mac + Android Studio + gradle 2.14.1，主要包含以下3块内容：</h3><ul>
+<li>NDK环境搭建</li>
+<li>编写第一个JNI项目</li>
+<li>打包出动态so文件，在其他项目中使用</li>
+</ul>
+<h4 id="一、NDK环境搭建"><a href="#一、NDK环境搭建" class="headerlink" title="一、NDK环境搭建"></a>一、NDK环境搭建</h4><ol>
+<li>从Android Studio安装(自行翻墙)<br>打开AndroidStudio，选择顶部工具条，Tools-&gt;Android-&gt;SDK Manager-&gt;SDK Tools-&gt;NDK 点击install</li>
+<li><p>自行下载ndk包<br>1）国内推荐通过<a href="http://www.androiddevtools.cn/" target="_blank" rel="external">AndroidDevTools镜像</a>下载，或者Google的官方网站下载Android NDK的安装包<a href="https://developer.android.com/ndk/downloads/index.html" target="_blank" rel="external">https://developer.android.com/ndk/downloads/index.html</a></p>
+<p> <img src="http://upload-images.jianshu.io/upload_images/2510928-69ba6a978248728a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="NDK r13b"></p>
+<p>2）下载ndk包后解析到某个路径，打开Project Structure-&gt;设置 NDK location</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2510928-8d37269c2cffd5e1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="AndroidDevTools 下载"></p>
+</li>
+<li>ndk环境变量配置，我们需要使用到ndk-build命令<br> 打开终端 -&gt; 输入 ：vim ~/.bash_profile -&gt; 加入ndk 包的路径(mac中环境变量之间以封号隔开)</li>
+</ol>
+<p>自此，ndk开发环境我们已经可以进行jni开发了</p>
+<h4 id="二、JNI开发"><a href="#二、JNI开发" class="headerlink" title="二、JNI开发"></a>二、JNI开发</h4><ol>
+<li>创建android项目</li>
+<li><p>查看项目local.properties中加入ndk和sdk的路径是否正确</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ndk.dir=/Users/userName/AndroidStudioProjects/ndk/android-ndk-r13b</div><div class="line">sdk.dir=/Users/userName/Library/Android/sdk</div></pre></td></tr></table></figure>
+</li>
+<li><p>配置项目下的gradle.properties文件，表示我们要使用NDK进行开发。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">android.useDeprecatedNdk=true</div></pre></td></tr></table></figure>
+</li>
+<li><p>在moudle根目录下的的build.gradle中的defaultConfig标签内部里加入如下代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">ndk&#123;    </div><div class="line">   moduleName &quot;hello&quot;       //生成的so文件名字，调用C程序的代码中会用到该名字    </div><div class="line">   abiFilters &quot;armeabi&quot;, &quot;armeabi-v7a&quot;, &quot;x86&quot; //输出指定三种平台下的so库,</div><div class="line">   // 还可以添加 &apos;x86_64&apos;, &apos;mips&apos;, &apos;mips64&apos;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>编写jni代码   </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">package com.david.ndktest;</div><div class="line">-</div><div class="line">public class MainActivity extends AppCompatActivity &#123;</div><div class="line"></div><div class="line">    //使用静态代码块，表示我们要加载的资源文件为libsecret.so</div><div class="line">    static &#123;</div><div class="line">        System.loadLibrary(&quot;secret&quot;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</div><div class="line">        super.onCreate(savedInstanceState);</div><div class="line">        setContentView(R.layout.activity_main);</div><div class="line">        TextView tv_msg = (TextView) findViewById(R.id.tv_msg);</div><div class="line">        tv_msg.setText(stringFromat());</div><div class="line"></div><div class="line">    &#125;</div><div class="line">    //声明一个本地方法，用native关键字修饰</div><div class="line">    public native String stringFromat();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>生成.h头文件<br>直接使用Android Studio 底部的Terminal，默认命令行窗口路径已经在当前项目，进入到app/src/main/java目录，输入以下命令（固定格式：javah -jni 包名+类名）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">javah -jni com.david.ndktest.MainActivity</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>为在对应包的根目录下生成.h文件，熟悉该函数名后，日常开发中可以不用生成.h文件<img src="http://upload-images.jianshu.io/upload_images/2510928-21d455358eddf978.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="生成头文件"></p>
+<ol>
+<li><p>执行第5部的时候，对应native会提示找不到对应方法，快捷键 alt+enter 会生成对应jni文件夹，包含libName.c文件，此处MainActivity中的native方法还是会显示红色，但是不影响编译<br><img src="http://upload-images.jianshu.io/upload_images/2510928-ac8cd0c189cf7315.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="生成.c文件"></p>
+</li>
+<li><p>编译项目后会发现app/build中已经生成so文件，并且已经对应的cpu包就是我们在gradle中已经配置的,并且已经调用成功</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2510928-828a92c9b00a5e2a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="build中生成对应so文件">  </p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2510928-39a7b4f4ec0cbec7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="成功调用native方法"></p>
+</li>
+</ol>
+<p>自此我们的第一个JNI项目已经编写完毕</p>
+<h4 id="三、打包出动态so文件，在其他项目中使用"><a href="#三、打包出动态so文件，在其他项目中使用" class="headerlink" title="三、打包出动态so文件，在其他项目中使用"></a>三、打包出动态so文件，在其他项目中使用</h4><p>   有时候我们的需求是这样的，我们把一些比较重要的业务逻辑封装到ndk内部，对java层只暴露接口。我们就需要打包出so文件，并且可能需要在其他项目中使用，下面将介绍so（符合JNI标准）文件的打包，以及在其他项目中如何正确的调用</p>
+<ul>
+<li>编写Android.mk文件，放到jni文件夹根目录，与.c文件同级</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">LOCAL_PATH := $(call my-dir)</div><div class="line">include $(CLEAR_VARS)</div><div class="line">LOCAL_MODULE := secret <span class="comment">//lib 名</span></div><div class="line">LOCAL_SRC_FILES := \</div><div class="line">	/Users/userName/AndroidStudioProjects/NdkTest/app/src/main/jni/secret.c \ <span class="comment">//.c文件名</span></div><div class="line"></div><div class="line">include $(BUILD_SHARED_LIBRARY)</div></pre></td></tr></table></figure>
+<ul>
+<li><p>使用ndk-build命令（需要配置ndk环境变量，参照第一步第3点），生成so文件  </p>
+<p> 进入到main目录后在terminal中输入命令，ndk-build工具便会帮我们打包出所有cpu平台so文件（目前不知道如何设置需要打包cpu平台）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ndk-build</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/2510928-c839afa7a3545010.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="building so文件"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2510928-9e5236382bfd74ac.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="main根目录下生成lib，obj目录"></p>
+<ul>
+<li>其他项目中使用该so文件<ul>
+<li>拷贝so文件到项目的main/jniLibs目录</li>
+<li>==新建package，包名与类名以及方法名必须与生成so文件的类保持一致！==</li>
+<li>使用方法与第二部一致，需要声明loadLibrary与native方法<br><img src="http://upload-images.jianshu.io/upload_images/2510928-b96ee367851104db.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="">  </li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>调用native方法<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">com.keywea.duolintest;</div><div class="line">-</div><div class="line">public class MainActivity extends AppCompatActivity &#123;</div><div class="line">    @Override</div><div class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</div><div class="line">        super.onCreate(savedInstanceState);</div><div class="line">        setContentView(R.layout.activity_main);</div><div class="line">        TextView tv_msg = (TextView) findViewById(R.id.tv_msg);</div><div class="line">        tv_msg.setText(com.david.ndktest.MainActivity.stringFromat());</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="自此我们已经能够接入符合JNI标准的so库，重点在于包名，类名，方法名需要与so库保持一致，因此我们在提供so库的时候一定要记录详细的交互文档"><a href="#自此我们已经能够接入符合JNI标准的so库，重点在于包名，类名，方法名需要与so库保持一致，因此我们在提供so库的时候一定要记录详细的交互文档" class="headerlink" title="自此我们已经能够接入符合JNI标准的so库，重点在于包名，类名，方法名需要与so库保持一致，因此我们在提供so库的时候一定要记录详细的交互文档"></a>自此我们已经能够接入符合JNI标准的so库，重点在于包名，类名，方法名需要与so库保持一致，因此我们在提供so库的时候一定要记录详细的交互文档</h3>
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://hwzhang.top/2017/03/21/android-ndk-base/#comments" class="article-comment-link ds-thread-count" data-thread-key="http://hwzhang.top/2017/03/21/android-ndk-base/">评论</a>
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
+    <article id="post-sqlite-greendao3" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2017/03/21/sqlite-greendao3/">greenDAO3 入门（配置，基本操作，数据库升级）</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/03/21/sqlite-greendao3/">
+            <time datetime="2017-03-21T13:13:43.000Z" itemprop="datePublished">2017-03-21</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/sqlite/">sqlite</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h5 id="Sqlite作为android重要的数据存储库，原生类SQLiteOpenHelper使用起来繁琐容易出错，本着”偷懒”的目的，来学习一下当下十分受欢迎的ORM-框架：-greenDAO；网上教程不少，但是大都是针对3-0之前的版本，greenDAO2和3的构建和生成代码的方式区别很大，最终还是通过greenDAO-github上的介绍，慢慢摸索，成功的在项目中构建了greenDAO，本文章写于greenDao更新至3-2版本"><a href="#Sqlite作为android重要的数据存储库，原生类SQLiteOpenHelper使用起来繁琐容易出错，本着”偷懒”的目的，来学习一下当下十分受欢迎的ORM-框架：-greenDAO；网上教程不少，但是大都是针对3-0之前的版本，greenDAO2和3的构建和生成代码的方式区别很大，最终还是通过greenDAO-github上的介绍，慢慢摸索，成功的在项目中构建了greenDAO，本文章写于greenDao更新至3-2版本" class="headerlink" title="Sqlite作为android重要的数据存储库，原生类SQLiteOpenHelper使用起来繁琐容易出错，本着”偷懒”的目的，来学习一下当下十分受欢迎的ORM 框架： greenDAO；网上教程不少，但是大都是针对3.0之前的版本，greenDAO2和3的构建和生成代码的方式区别很大，最终还是通过greenDAO github上的介绍，慢慢摸索，成功的在项目中构建了greenDAO，本文章写于greenDao更新至3.2版本"></a><em>Sqlite作为android重要的数据存储库，原生类SQLiteOpenHelper使用起来繁琐容易出错，本着”偷懒”的目的，来学习一下当下十分受欢迎的ORM 框架： greenDAO；网上教程不少，但是大都是针对3.0之前的版本，greenDAO2和3的构建和生成代码的方式区别很大，最终还是通过greenDAO github上的介绍，慢慢摸索，成功的在项目中构建了greenDAO，本文章写于greenDao更新至3.2版本</em></h5><h4 id="一、什么是greenDAO？"><a href="#一、什么是greenDAO？" class="headerlink" title="一、什么是greenDAO？"></a>一、什么是greenDAO？</h4><p>官方介绍：<br><a href="https://github.com/greenrobot/greenDAO" target="_blank" rel="external">greenDAO github</a><br><a href="http://greenrobot.org/greendao/" target="_blank" rel="external">greenDAO 官网</a><br>网友的博客：<br><a href="https://www.daidingkang.cc/2016/12/08/GreenDao/" target="_blank" rel="external">Android ORM框架 GreenDao3.0的使用</a></p>
+<p>  greenDAO3开始使用注解的方式定义实体类（entity），并且是通过安装gradle插件来生成代码。</p>
+<h4 id="二、如何使用greenDAO"><a href="#二、如何使用greenDAO" class="headerlink" title="二、如何使用greenDAO"></a>二、如何使用greenDAO</h4><p>构建之前，不熟悉gradle概念的同学建议学习<a href="https://segmentfault.com/a/1190000004229002" target="_blank" rel="external">Gradle for android 系列教程</a>    </p>
+<p>先来看下greenDAO 官方构建介绍：  </p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2510928-7cb41efb24390e51.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="greenDAO github 构建介绍"></p>
+<h5 id="开始搭建："><a href="#开始搭建：" class="headerlink" title="开始搭建："></a>开始搭建：</h5><ul>
+<li>github中提示添加maven仓库，但是android studio 项目已经默认包含了jcenter仓库，而jcenter仓库就是maven仓库的一个分支，因此我们不要再添加仓库，直接添加classPath即可</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/2510928-64c6178668dc763a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="项目下build.gradle">  </p>
+<ul>
+<li>在moudle下的build.gradle文件中 申明插件以及配置greendao（可以不配置）</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/2510928-92a353f5c137668d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="moudle 下build.gradle脚本中配置">  </p>
+<ul>
+<li>并在dependencies中添加compile<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* green dao */</span></div><div class="line">compile <span class="string">'org.greenrobot:greendao:3.2.0</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="三、使用greenDAO"><a href="#三、使用greenDAO" class="headerlink" title="三、使用greenDAO"></a>三、使用greenDAO</h4><ol>
+<li><p>编写实体类:User类，使用greendao @Entity注解</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.greenrobot.greendao.annotation.Entity;</div><div class="line"><span class="keyword">import</span> org.greenrobot.greendao.annotation.Id;</div><div class="line"><span class="meta">@Entity</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</div><div class="line">    <span class="meta">@Id</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">long</span> id;</div><div class="line">    <span class="keyword">private</span> String userName;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</div><div class="line">    <span class="keyword">private</span> String gender;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>编译项目，build后greendao插件会为所有带有该注解的实体生成Dao文件，以及DaoManager与DaoSession，默认生成目录为build/generated/source  ,如果我们在gradle脚本中配置了，则会生成在我们的配置目录 </p>
+</li>
+</ol>
+<p><img src="http://upload-images.jianshu.io/upload_images/2510928-2f83db21ba83d176.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="在配置目录中生成dao文件"></p>
+<p>不配置，则在默认目录(build/generated/source/greendao)下生成dao文件:</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2510928-cff454b89f9a3070.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="不配置，则在默认目录下生成dao文件"></p>
+<h4 id="四、greenDAO-注解"><a href="#四、greenDAO-注解" class="headerlink" title="四、greenDAO 注解"></a>四、greenDAO 注解</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="number">1</span>.实体<span class="meta">@Entity</span>注解</div><div class="line"></div><div class="line">schema：告知GreenDao当前实体属于哪个schema</div><div class="line">active：标记一个实体处于活动状态，活动实体有更新、删除和刷新方法</div><div class="line">nameInDb：在数据中使用的别名，默认使用的是实体的类名</div><div class="line">indexes：定义索引，可以跨越多个列</div><div class="line">createInDb：标记创建数据库表</div><div class="line"><span class="number">2</span>.基础属性注解</div><div class="line"></div><div class="line"><span class="meta">@Id</span> :主键 Long型，可以通过<span class="meta">@Id</span>(autoincrement = <span class="keyword">true</span>)设置自增长</div><div class="line"><span class="meta">@Property</span>：设置一个非默认关系映射所对应的列名，默认是的使用字段名 举例：<span class="meta">@Property</span> (nameInDb=<span class="string">"name"</span>)</div><div class="line"><span class="meta">@NotNul</span>：设置数据库表当前列不能为空</div><div class="line"><span class="meta">@Transient</span> ：添加次标记之后不会生成数据库表的列</div><div class="line"><span class="number">3</span>.索引注解</div><div class="line"></div><div class="line"><span class="meta">@Index</span>：使用<span class="meta">@Index</span>作为一个属性来创建一个索引，通过name设置索引别名，也可以通过unique给索引添加约束</div><div class="line"><span class="meta">@Unique</span>：向数据库列添加了一个唯一的约束</div><div class="line"><span class="number">4</span>.关系注解</div><div class="line"></div><div class="line"><span class="meta">@ToOne</span>：定义与另一个实体（一个实体对象）的关系</div><div class="line"><span class="meta">@ToMany</span>：定义与多个实体对象的关系</div></pre></td></tr></table></figure>
+<h4 id="五、使用greenDAO-进行数据操作（详情可查阅博友的文章）"><a href="#五、使用greenDAO-进行数据操作（详情可查阅博友的文章）" class="headerlink" title="五、使用greenDAO 进行数据操作（详情可查阅博友的文章）"></a>五、使用greenDAO 进行数据操作（<a href="http://www.jianshu.com/p/4e6d72e7f57a" target="_blank" rel="external">详情可查阅博友的文章</a>）</h4><ul>
+<li>使用单例模式构建一个工具类来获取daoSession等对象<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GreenDaoHelper</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> DaoMaster.DevOpenHelper devOpenHelper;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> SQLiteDatabase database;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> DaoMaster daoMaster;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> DaoSession daoSession;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 初始化greenDao</div><div class="line">     * 建议放在Application 中进行</div><div class="line">     */</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">initDatabase</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="comment">// 通过 DaoMaster 的内部类 DevOpenHelper，你可以得到一个便利的 SQLiteOpenHelper 对象。</span></div><div class="line">        <span class="comment">// 可能你已经注意到了，你并不需要去编写「CREATE TABLE」这样的 SQL 语句，因为 greenDAO 已经帮你做了。</span></div><div class="line">        <span class="comment">// 注意：默认的 DaoMaster.DevOpenHelper 会在数据库升级时，删除所有的表，意味着这将导致数据的丢失。</span></div><div class="line">        <span class="comment">// 所以，在正式的项目中，你还应该做一层封装，来实现数据库的安全升级。</span></div><div class="line">        devOpenHelper = <span class="keyword">new</span> DaoMaster.DevOpenHelper(AppContext.getInstance(),<span class="string">"cache-db"</span>,<span class="keyword">null</span>);<span class="comment">//数据库名</span></div><div class="line">        database = devOpenHelper.getWritableDatabase();</div><div class="line">        <span class="comment">// 注意：该数据库连接属于 DaoMaster，所以多个 Session 指的是相同的数据库连接。</span></div><div class="line">        daoMaster = <span class="keyword">new</span> DaoMaster(database);</div><div class="line">        daoSession = daoMaster.newSession();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> DaoSession <span class="title">getDaoSession</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> daoSession;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> SQLiteDatabase <span class="title">getDb</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> database;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="数据库的增删改查我们都将通过Dao来操作"><a href="#数据库的增删改查我们都将通过Dao来操作" class="headerlink" title="数据库的增删改查我们都将通过Dao来操作"></a>数据库的增删改查我们都将通过Dao来操作</h4><ul>
+<li>增加数据(直接inser一个对象即可，十分简便)<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> UserDao mUserDao = GreenDaoHelper.getDaoSession().getUserDao();</div><div class="line"></div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertData</span><span class="params">()</span></span>&#123;</div><div class="line">       <span class="comment">//数据库的增删改查我们都将通过UserDao来进行，插入操作如下：</span></div><div class="line">       mUserDao.insert(<span class="keyword">new</span> User(<span class="keyword">null</span>,<span class="string">"david"</span>,<span class="number">23</span>,<span class="string">"male"</span>));<span class="comment">//id传null 即自增。==&gt; 这里是Long类型而不是long</span></div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>小手一抖，一口气插了6条数据:  </p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2510928-ecc8b77c42bda34c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="小手一抖，一口气插了6条数据"></p>
+<ul>
+<li>删除数据(删除数据和修改数据的思路一样，都是要先查找到数据)，操作很简单，效果就不一一截图了</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//查询id等于3的所有行并删除</span></div><div class="line">User user = mUserDao.queryBuilder().where(UserDao.Properties.Id.eq(<span class="number">3</span>)).build().unique();</div><div class="line"><span class="keyword">if</span> (user == <span class="keyword">null</span>)   ToastUtils.show(getView(), <span class="string">"用户不存在!"</span>);</div><div class="line"><span class="keyword">else</span>   mUserDao.deleteByKey(user.getId());</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//查询id小于5的集合并删除</span></div><div class="line">List&lt;User&gt; userList = (List&lt;User&gt;) mUserDao.queryBuilder().where(UserDao.Properties.Id.le(<span class="number">5</span>)).build().list();</div><div class="line"><span class="keyword">for</span> (User user : userList) &#123;</div><div class="line">    mUserDao.delete(user);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//删除所有数据</span></div><div class="line">mUserDao.deleteAll();</div></pre></td></tr></table></figure>
+<ul>
+<li>修改数据<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//修改id为2的行 </span></div><div class="line">User user = <span class="keyword">new</span> User((<span class="keyword">long</span>) <span class="number">2</span>, <span class="string">"Nancy"</span>, <span class="number">23</span>, <span class="string">"female"</span>);</div><div class="line">mUserDao.update(user);</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//查询id&gt;= 3 且like ("%david%")</span></div><div class="line">User user = mUserDao.queryBuilder()</div><div class="line">                .where(UserDao.Properties.Id.ge(<span class="number">3</span>), UserDao.Properties.UserName.like(<span class="string">"%david%"</span>)).build().unique();</div><div class="line"><span class="keyword">if</span> (user == <span class="keyword">null</span>) &#123;</div><div class="line">    ToastUtils.show(getView(), <span class="string">"用户不存在!"</span>);</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    user.setUserName(<span class="string">"王五"</span>);</div><div class="line">    mUserDao.update(user);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>查询数据</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//查出所有数据</span></div><div class="line">List&lt;User&gt; users = mUserDao.loadAll();    </div><div class="line"></div><div class="line"><span class="comment">//查询id为1~4之间的数，查出前2个</span></div><div class="line">List&lt;User&gt; users = mUserDao.queryBuilder()</div><div class="line">                .where(UserDao.Properties.Id.between(<span class="number">1</span>, <span class="number">4</span>)).limit(<span class="number">2</span>).build().list();</div></pre></td></tr></table></figure>
+<h4 id="六、数据库升级"><a href="#六、数据库升级" class="headerlink" title="六、数据库升级"></a>六、数据库升级</h4><h5 id="数据库升级的意义："><a href="#数据库升级的意义：" class="headerlink" title="数据库升级的意义："></a><em>数据库升级的意义：</em></h5><p>如果我们再项目中使用了数据库。而数据库的结构在第一版的时候定下来，之后发布功能更新，或增加业务逻辑，原来的数据库结构可能就不适用了。而如果数据库的结构与之前版本的结构不同，新版本的应用读取旧数据库肯定会出问题。解决办法只有两种：<br>1.让用户卸载老版本再安装新的程序；<br>2.软件自行更新数据库结构。<br>第一种办法很明显不具备可操作性，而且用户一旦卸载软件，数据就丢失了，这是不能容忍的事情。因此，作为开发者必须妥善处理数据库的升级问题。</p>
+<ul>
+<li>修改gradle文件</li>
+</ul>
+<p>首先在module的gradle文件中修改版本号：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//改为最新的版本号  </span></div><div class="line">schemaVersion <span class="number">2</span></div></pre></td></tr></table></figure>
+<p><em>如果只是做了上面的步骤则会默认清除所有数据,一看源码便知，当检测到version变化的时候便执行dropAllTables()操作，再重新建库</em><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/** WARNING: Drops all table on Upgrade! Use only during development. */</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">DevOpenHelper</span> <span class="keyword">extends</span> <span class="title">OpenHelper</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DevOpenHelper</span><span class="params">(Context context, String name)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(context, name);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DevOpenHelper</span><span class="params">(Context context, String name, CursorFactory factory)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(context, name, factory);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onUpgrade</span><span class="params">(Database db, <span class="keyword">int</span> oldVersion, <span class="keyword">int</span> newVersion)</span> </span>&#123;</div><div class="line">        Log.i(<span class="string">"greenDAO"</span>, <span class="string">"Upgrading schema from version "</span> + oldVersion + <span class="string">" to "</span> + newVersion + <span class="string">" by dropping all tables"</span>);</div><div class="line">        dropAllTables(db, <span class="keyword">true</span>);</div><div class="line">        onCreate(db);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>数据迁移的核心思想：<br>1 把旧表改为临时表<br>2 建立新表<br>3 临时表数据写入新表，删除临时表  </p>
+<p><em>站在巨人的肩膀上，这里直接使用了开源的库，配合greenDAO来做数据迁移，亲测稳定：</em><br><a href="https://github.com/yuweiguocn/GreenDaoUpgradeHelper/blob/master/README_CH.md" target="_blank" rel="external">GreenDaoUpgradeHelper</a></p>
+<p>schemaVersion 版本加1，User类新增属性：major</p>
+<p>不做迁移处理前，重新安装后数据库已经被重置，数据为空。迁移配置后，旧表数据已经被存到新表中，major字段为null;<br><img src="http://upload-images.jianshu.io/upload_images/2510928-da57db9a1687ec70.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="数据迁移成功"></p>
+<p>使用方式该git上面介绍的很详细了，不再赘述。<br>感谢前辈们的无私分享。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://hwzhang.top/2017/03/21/sqlite-greendao3/#comments" class="article-comment-link ds-thread-count" data-thread-key="http://hwzhang.top/2017/03/21/sqlite-greendao3/">评论</a>
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-SlidingMenu" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -1072,6 +1396,44 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/2017/03/21/android-ndk-base/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://upload-images.jianshu.io/upload_images/2510928-69ba6a978248728a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)" alt="Android Studio之NDK环境搭建，so文件打包以及使用" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2017/03/21/android-ndk-base/" class="title">Android Studio之NDK环境搭建，so文件打包以及使用</a></p>
+                            <p class="item-date"><time datetime="2017-03-21T14:12:33.000Z" itemprop="datePublished">2017-03-21</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/03/21/sqlite-greendao3/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://upload-images.jianshu.io/upload_images/2510928-da57db9a1687ec70.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)" alt="greenDAO3 入门（配置，基本操作，数据库升级）" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2017/03/21/sqlite-greendao3/" class="title">greenDAO3 入门（配置，基本操作，数据库升级）</a></p>
+                            <p class="item-date"><time datetime="2017-03-21T13:13:43.000Z" itemprop="datePublished">2017-03-21</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/2017/03/21/SlidingMenu/" class="thumbnail">
     
     
@@ -1126,44 +1488,6 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2016/09/07/wxpay-notes/" class="thumbnail">
-    
-    
-        <span class="thumbnail-image thumbnail-none"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"></p>
-                            <p class="item-title"><a href="/2016/09/07/wxpay-notes/" class="title">关于Android接入微信支付</a></p>
-                            <p class="item-date"><time datetime="2016-09-07T13:13:50.000Z" itemprop="datePublished">2016-09-07</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2016/09/01/android-utils/" class="thumbnail">
-    
-    
-        <span class="thumbnail-image thumbnail-none"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"></p>
-                            <p class="item-title"><a href="/2016/09/01/android-utils/" class="title">android开发中常用的工具类积累</a></p>
-                            <p class="item-date"><time datetime="2016-09-01T11:50:25.000Z" itemprop="datePublished">2016-09-01</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -1175,7 +1499,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">归档</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">2</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">2</span></li></ul>
         </div>
     </div>
 
@@ -1184,7 +1508,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">标签</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android-unwidget-study/">android-unwidget-study</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android-widget-study/">android-widget-study</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android-开源项目学习/">android-开源项目学习</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android开发工具/">android开发工具</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android第三方接入/">android第三方接入</a><span class="tag-list-count">2</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/NDK、JNI/">NDK、JNI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android-unwidget-study/">android-unwidget-study</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android-widget-study/">android-widget-study</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android-开源项目学习/">android-开源项目学习</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android开发工具/">android开发工具</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android第三方接入/">android第三方接入</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/">sqlite</a><span class="tag-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -1193,7 +1517,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/android-unwidget-study/" style="font-size: 10px;">android-unwidget-study</a> <a href="/tags/android-widget-study/" style="font-size: 20px;">android-widget-study</a> <a href="/tags/android-开源项目学习/" style="font-size: 10px;">android-开源项目学习</a> <a href="/tags/android开发工具/" style="font-size: 10px;">android开发工具</a> <a href="/tags/android第三方接入/" style="font-size: 20px;">android第三方接入</a>
+            <a href="/tags/NDK、JNI/" style="font-size: 10px;">NDK、JNI</a> <a href="/tags/android-unwidget-study/" style="font-size: 10px;">android-unwidget-study</a> <a href="/tags/android-widget-study/" style="font-size: 20px;">android-widget-study</a> <a href="/tags/android-开源项目学习/" style="font-size: 10px;">android-开源项目学习</a> <a href="/tags/android开发工具/" style="font-size: 10px;">android开发工具</a> <a href="/tags/android第三方接入/" style="font-size: 20px;">android第三方接入</a> <a href="/tags/sqlite/" style="font-size: 10px;">sqlite</a>
         </div>
     </div>
 

@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>greenDAO3 入门（配置，基本操作，数据库升级） | David&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="Sqlite作为android重要的数据存储库，原生类SQLiteOpenHelper使用起来繁琐容易出错，本着”偷懒”的目的，来学习一下当下十分受欢迎的ORM 框架： greenDAO；网上教程不少，但是大都是针对3.0之前的版本，greenDAO2和3的构建和生成代码的方式区别很大，最终还是通过greenDAO github上的介绍，慢慢摸索，成功的在项目中构建了greenDAO，本文章写于g">
+<meta property="og:type" content="article">
+<meta property="og:title" content="greenDAO3 入门（配置，基本操作，数据库升级）">
+<meta property="og:url" content="http://hwzhang.top/2017/03/21/sqlite-greendao3/index.html">
+<meta property="og:site_name" content="David's Blog">
+<meta property="og:description" content="Sqlite作为android重要的数据存储库，原生类SQLiteOpenHelper使用起来繁琐容易出错，本着”偷懒”的目的，来学习一下当下十分受欢迎的ORM 框架： greenDAO；网上教程不少，但是大都是针对3.0之前的版本，greenDAO2和3的构建和生成代码的方式区别很大，最终还是通过greenDAO github上的介绍，慢慢摸索，成功的在项目中构建了greenDAO，本文章写于g">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2510928-da57db9a1687ec70.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-03-21T13:16:39.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="greenDAO3 入门（配置，基本操作，数据库升级）">
+<meta name="twitter:description" content="Sqlite作为android重要的数据存储库，原生类SQLiteOpenHelper使用起来繁琐容易出错，本着”偷懒”的目的，来学习一下当下十分受欢迎的ORM 框架： greenDAO；网上教程不少，但是大都是针对3.0之前的版本，greenDAO2和3的构建和生成代码的方式区别很大，最终还是通过greenDAO github上的介绍，慢慢摸索，成功的在项目中构建了greenDAO，本文章写于g">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2510928-da57db9a1687ec70.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">David&#39;s Blog</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">Home</a>
+                
+                    <a class="main-nav-link" href="/archives">Archives</a>
+                
+                    <a class="main-nav-link" href="/categories">Categories</a>
+                
+                    <a class="main-nav-link" href="/tags">Tags</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="http://tva4.sinaimg.cn/crop.0.0.640.640.180/b062d405jw8f5tjwccbkxj20hs0hswf7.jpg" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">Home</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">Archives</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">Categories</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">Tags</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="http://tva4.sinaimg.cn/crop.0.0.640.640.180/b062d405jw8f5tjwccbkxj20hs0hswf7.jpg" />
+            <h2 id="name">heweizhang</h2>
+            <h3 id="title">Android Application Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>XiaMen, China</span>
+            <a id="follow" target="_blank" href="http://www.jianshu.com/u/bc439f0553f4">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                9
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                7
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/heweizhang" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="http://weibo.com/u/2959266821" target="_blank" title="weibo" class=tooltip>
+                            <i class="fa fa-weibo"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/17505926606@163.com" target="_blank" title="email" class=tooltip>
+                            <i class="fa fa-email"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-sqlite-greendao3" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            greenDAO3 入门（配置，基本操作，数据库升级）
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/03/21/sqlite-greendao3/">
+            <time datetime="2017-03-21T13:13:43.000Z" itemprop="datePublished">2017-03-21</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/sqlite/">sqlite</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h5 id="Sqlite作为android重要的数据存储库，原生类SQLiteOpenHelper使用起来繁琐容易出错，本着”偷懒”的目的，来学习一下当下十分受欢迎的ORM-框架：-greenDAO；网上教程不少，但是大都是针对3-0之前的版本，greenDAO2和3的构建和生成代码的方式区别很大，最终还是通过greenDAO-github上的介绍，慢慢摸索，成功的在项目中构建了greenDAO，本文章写于greenDao更新至3-2版本"><a href="#Sqlite作为android重要的数据存储库，原生类SQLiteOpenHelper使用起来繁琐容易出错，本着”偷懒”的目的，来学习一下当下十分受欢迎的ORM-框架：-greenDAO；网上教程不少，但是大都是针对3-0之前的版本，greenDAO2和3的构建和生成代码的方式区别很大，最终还是通过greenDAO-github上的介绍，慢慢摸索，成功的在项目中构建了greenDAO，本文章写于greenDao更新至3-2版本" class="headerlink" title="Sqlite作为android重要的数据存储库，原生类SQLiteOpenHelper使用起来繁琐容易出错，本着”偷懒”的目的，来学习一下当下十分受欢迎的ORM 框架： greenDAO；网上教程不少，但是大都是针对3.0之前的版本，greenDAO2和3的构建和生成代码的方式区别很大，最终还是通过greenDAO github上的介绍，慢慢摸索，成功的在项目中构建了greenDAO，本文章写于greenDao更新至3.2版本"></a><em>Sqlite作为android重要的数据存储库，原生类SQLiteOpenHelper使用起来繁琐容易出错，本着”偷懒”的目的，来学习一下当下十分受欢迎的ORM 框架： greenDAO；网上教程不少，但是大都是针对3.0之前的版本，greenDAO2和3的构建和生成代码的方式区别很大，最终还是通过greenDAO github上的介绍，慢慢摸索，成功的在项目中构建了greenDAO，本文章写于greenDao更新至3.2版本</em></h5><h4 id="一、什么是greenDAO？"><a href="#一、什么是greenDAO？" class="headerlink" title="一、什么是greenDAO？"></a>一、什么是greenDAO？</h4><p>官方介绍：<br><a href="https://github.com/greenrobot/greenDAO" target="_blank" rel="external">greenDAO github</a><br><a href="http://greenrobot.org/greendao/" target="_blank" rel="external">greenDAO 官网</a><br>网友的博客：<br><a href="https://www.daidingkang.cc/2016/12/08/GreenDao/" target="_blank" rel="external">Android ORM框架 GreenDao3.0的使用</a></p>
+<p>  greenDAO3开始使用注解的方式定义实体类（entity），并且是通过安装gradle插件来生成代码。</p>
+<h4 id="二、如何使用greenDAO"><a href="#二、如何使用greenDAO" class="headerlink" title="二、如何使用greenDAO"></a>二、如何使用greenDAO</h4><p>构建之前，不熟悉gradle概念的同学建议学习<a href="https://segmentfault.com/a/1190000004229002" target="_blank" rel="external">Gradle for android 系列教程</a>    </p>
+<p>先来看下greenDAO 官方构建介绍：  </p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2510928-7cb41efb24390e51.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="greenDAO github 构建介绍"></p>
+<h5 id="开始搭建："><a href="#开始搭建：" class="headerlink" title="开始搭建："></a>开始搭建：</h5><ul>
+<li>github中提示添加maven仓库，但是android studio 项目已经默认包含了jcenter仓库，而jcenter仓库就是maven仓库的一个分支，因此我们不要再添加仓库，直接添加classPath即可</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/2510928-64c6178668dc763a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="项目下build.gradle">  </p>
+<ul>
+<li>在moudle下的build.gradle文件中 申明插件以及配置greendao（可以不配置）</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/2510928-92a353f5c137668d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="moudle 下build.gradle脚本中配置">  </p>
+<ul>
+<li>并在dependencies中添加compile<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* green dao */</span></div><div class="line">compile <span class="string">'org.greenrobot:greendao:3.2.0</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="三、使用greenDAO"><a href="#三、使用greenDAO" class="headerlink" title="三、使用greenDAO"></a>三、使用greenDAO</h4><ol>
+<li><p>编写实体类:User类，使用greendao @Entity注解</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.greenrobot.greendao.annotation.Entity;</div><div class="line"><span class="keyword">import</span> org.greenrobot.greendao.annotation.Id;</div><div class="line"><span class="meta">@Entity</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</div><div class="line">    <span class="meta">@Id</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">long</span> id;</div><div class="line">    <span class="keyword">private</span> String userName;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</div><div class="line">    <span class="keyword">private</span> String gender;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>编译项目，build后greendao插件会为所有带有该注解的实体生成Dao文件，以及DaoManager与DaoSession，默认生成目录为build/generated/source  ,如果我们在gradle脚本中配置了，则会生成在我们的配置目录 </p>
+</li>
+</ol>
+<p><img src="http://upload-images.jianshu.io/upload_images/2510928-2f83db21ba83d176.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="在配置目录中生成dao文件"></p>
+<p>不配置，则在默认目录(build/generated/source/greendao)下生成dao文件:</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2510928-cff454b89f9a3070.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="不配置，则在默认目录下生成dao文件"></p>
+<h4 id="四、greenDAO-注解"><a href="#四、greenDAO-注解" class="headerlink" title="四、greenDAO 注解"></a>四、greenDAO 注解</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="number">1</span>.实体<span class="meta">@Entity</span>注解</div><div class="line"></div><div class="line">schema：告知GreenDao当前实体属于哪个schema</div><div class="line">active：标记一个实体处于活动状态，活动实体有更新、删除和刷新方法</div><div class="line">nameInDb：在数据中使用的别名，默认使用的是实体的类名</div><div class="line">indexes：定义索引，可以跨越多个列</div><div class="line">createInDb：标记创建数据库表</div><div class="line"><span class="number">2</span>.基础属性注解</div><div class="line"></div><div class="line"><span class="meta">@Id</span> :主键 Long型，可以通过<span class="meta">@Id</span>(autoincrement = <span class="keyword">true</span>)设置自增长</div><div class="line"><span class="meta">@Property</span>：设置一个非默认关系映射所对应的列名，默认是的使用字段名 举例：<span class="meta">@Property</span> (nameInDb=<span class="string">"name"</span>)</div><div class="line"><span class="meta">@NotNul</span>：设置数据库表当前列不能为空</div><div class="line"><span class="meta">@Transient</span> ：添加次标记之后不会生成数据库表的列</div><div class="line"><span class="number">3</span>.索引注解</div><div class="line"></div><div class="line"><span class="meta">@Index</span>：使用<span class="meta">@Index</span>作为一个属性来创建一个索引，通过name设置索引别名，也可以通过unique给索引添加约束</div><div class="line"><span class="meta">@Unique</span>：向数据库列添加了一个唯一的约束</div><div class="line"><span class="number">4</span>.关系注解</div><div class="line"></div><div class="line"><span class="meta">@ToOne</span>：定义与另一个实体（一个实体对象）的关系</div><div class="line"><span class="meta">@ToMany</span>：定义与多个实体对象的关系</div></pre></td></tr></table></figure>
+<h4 id="五、使用greenDAO-进行数据操作（详情可查阅博友的文章）"><a href="#五、使用greenDAO-进行数据操作（详情可查阅博友的文章）" class="headerlink" title="五、使用greenDAO 进行数据操作（详情可查阅博友的文章）"></a>五、使用greenDAO 进行数据操作（<a href="http://www.jianshu.com/p/4e6d72e7f57a" target="_blank" rel="external">详情可查阅博友的文章</a>）</h4><ul>
+<li>使用单例模式构建一个工具类来获取daoSession等对象<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GreenDaoHelper</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> DaoMaster.DevOpenHelper devOpenHelper;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> SQLiteDatabase database;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> DaoMaster daoMaster;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> DaoSession daoSession;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 初始化greenDao</div><div class="line">     * 建议放在Application 中进行</div><div class="line">     */</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">initDatabase</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="comment">// 通过 DaoMaster 的内部类 DevOpenHelper，你可以得到一个便利的 SQLiteOpenHelper 对象。</span></div><div class="line">        <span class="comment">// 可能你已经注意到了，你并不需要去编写「CREATE TABLE」这样的 SQL 语句，因为 greenDAO 已经帮你做了。</span></div><div class="line">        <span class="comment">// 注意：默认的 DaoMaster.DevOpenHelper 会在数据库升级时，删除所有的表，意味着这将导致数据的丢失。</span></div><div class="line">        <span class="comment">// 所以，在正式的项目中，你还应该做一层封装，来实现数据库的安全升级。</span></div><div class="line">        devOpenHelper = <span class="keyword">new</span> DaoMaster.DevOpenHelper(AppContext.getInstance(),<span class="string">"cache-db"</span>,<span class="keyword">null</span>);<span class="comment">//数据库名</span></div><div class="line">        database = devOpenHelper.getWritableDatabase();</div><div class="line">        <span class="comment">// 注意：该数据库连接属于 DaoMaster，所以多个 Session 指的是相同的数据库连接。</span></div><div class="line">        daoMaster = <span class="keyword">new</span> DaoMaster(database);</div><div class="line">        daoSession = daoMaster.newSession();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> DaoSession <span class="title">getDaoSession</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> daoSession;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> SQLiteDatabase <span class="title">getDb</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> database;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="数据库的增删改查我们都将通过Dao来操作"><a href="#数据库的增删改查我们都将通过Dao来操作" class="headerlink" title="数据库的增删改查我们都将通过Dao来操作"></a>数据库的增删改查我们都将通过Dao来操作</h4><ul>
+<li>增加数据(直接inser一个对象即可，十分简便)<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> UserDao mUserDao = GreenDaoHelper.getDaoSession().getUserDao();</div><div class="line"></div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertData</span><span class="params">()</span></span>&#123;</div><div class="line">       <span class="comment">//数据库的增删改查我们都将通过UserDao来进行，插入操作如下：</span></div><div class="line">       mUserDao.insert(<span class="keyword">new</span> User(<span class="keyword">null</span>,<span class="string">"david"</span>,<span class="number">23</span>,<span class="string">"male"</span>));<span class="comment">//id传null 即自增。==&gt; 这里是Long类型而不是long</span></div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>小手一抖，一口气插了6条数据:  </p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2510928-ecc8b77c42bda34c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="小手一抖，一口气插了6条数据"></p>
+<ul>
+<li>删除数据(删除数据和修改数据的思路一样，都是要先查找到数据)，操作很简单，效果就不一一截图了</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//查询id等于3的所有行并删除</span></div><div class="line">User user = mUserDao.queryBuilder().where(UserDao.Properties.Id.eq(<span class="number">3</span>)).build().unique();</div><div class="line"><span class="keyword">if</span> (user == <span class="keyword">null</span>)   ToastUtils.show(getView(), <span class="string">"用户不存在!"</span>);</div><div class="line"><span class="keyword">else</span>   mUserDao.deleteByKey(user.getId());</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//查询id小于5的集合并删除</span></div><div class="line">List&lt;User&gt; userList = (List&lt;User&gt;) mUserDao.queryBuilder().where(UserDao.Properties.Id.le(<span class="number">5</span>)).build().list();</div><div class="line"><span class="keyword">for</span> (User user : userList) &#123;</div><div class="line">    mUserDao.delete(user);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//删除所有数据</span></div><div class="line">mUserDao.deleteAll();</div></pre></td></tr></table></figure>
+<ul>
+<li>修改数据<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//修改id为2的行 </span></div><div class="line">User user = <span class="keyword">new</span> User((<span class="keyword">long</span>) <span class="number">2</span>, <span class="string">"Nancy"</span>, <span class="number">23</span>, <span class="string">"female"</span>);</div><div class="line">mUserDao.update(user);</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//查询id&gt;= 3 且like ("%david%")</span></div><div class="line">User user = mUserDao.queryBuilder()</div><div class="line">                .where(UserDao.Properties.Id.ge(<span class="number">3</span>), UserDao.Properties.UserName.like(<span class="string">"%david%"</span>)).build().unique();</div><div class="line"><span class="keyword">if</span> (user == <span class="keyword">null</span>) &#123;</div><div class="line">    ToastUtils.show(getView(), <span class="string">"用户不存在!"</span>);</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    user.setUserName(<span class="string">"王五"</span>);</div><div class="line">    mUserDao.update(user);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>查询数据</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//查出所有数据</span></div><div class="line">List&lt;User&gt; users = mUserDao.loadAll();    </div><div class="line"></div><div class="line"><span class="comment">//查询id为1~4之间的数，查出前2个</span></div><div class="line">List&lt;User&gt; users = mUserDao.queryBuilder()</div><div class="line">                .where(UserDao.Properties.Id.between(<span class="number">1</span>, <span class="number">4</span>)).limit(<span class="number">2</span>).build().list();</div></pre></td></tr></table></figure>
+<h4 id="六、数据库升级"><a href="#六、数据库升级" class="headerlink" title="六、数据库升级"></a>六、数据库升级</h4><h5 id="数据库升级的意义："><a href="#数据库升级的意义：" class="headerlink" title="数据库升级的意义："></a><em>数据库升级的意义：</em></h5><p>如果我们再项目中使用了数据库。而数据库的结构在第一版的时候定下来，之后发布功能更新，或增加业务逻辑，原来的数据库结构可能就不适用了。而如果数据库的结构与之前版本的结构不同，新版本的应用读取旧数据库肯定会出问题。解决办法只有两种：<br>1.让用户卸载老版本再安装新的程序；<br>2.软件自行更新数据库结构。<br>第一种办法很明显不具备可操作性，而且用户一旦卸载软件，数据就丢失了，这是不能容忍的事情。因此，作为开发者必须妥善处理数据库的升级问题。</p>
+<ul>
+<li>修改gradle文件</li>
+</ul>
+<p>首先在module的gradle文件中修改版本号：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//改为最新的版本号  </span></div><div class="line">schemaVersion <span class="number">2</span></div></pre></td></tr></table></figure>
+<p><em>如果只是做了上面的步骤则会默认清除所有数据,一看源码便知，当检测到version变化的时候便执行dropAllTables()操作，再重新建库</em><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/** WARNING: Drops all table on Upgrade! Use only during development. */</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">DevOpenHelper</span> <span class="keyword">extends</span> <span class="title">OpenHelper</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DevOpenHelper</span><span class="params">(Context context, String name)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(context, name);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DevOpenHelper</span><span class="params">(Context context, String name, CursorFactory factory)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(context, name, factory);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onUpgrade</span><span class="params">(Database db, <span class="keyword">int</span> oldVersion, <span class="keyword">int</span> newVersion)</span> </span>&#123;</div><div class="line">        Log.i(<span class="string">"greenDAO"</span>, <span class="string">"Upgrading schema from version "</span> + oldVersion + <span class="string">" to "</span> + newVersion + <span class="string">" by dropping all tables"</span>);</div><div class="line">        dropAllTables(db, <span class="keyword">true</span>);</div><div class="line">        onCreate(db);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>数据迁移的核心思想：<br>1 把旧表改为临时表<br>2 建立新表<br>3 临时表数据写入新表，删除临时表  </p>
+<p><em>站在巨人的肩膀上，这里直接使用了开源的库，配合greenDAO来做数据迁移，亲测稳定：</em><br><a href="https://github.com/yuweiguocn/GreenDaoUpgradeHelper/blob/master/README_CH.md" target="_blank" rel="external">GreenDaoUpgradeHelper</a></p>
+<p>schemaVersion 版本加1，User类新增属性：major</p>
+<p>不做迁移处理前，重新安装后数据库已经被重置，数据为空。迁移配置后，旧表数据已经被存到新表中，major字段为null;<br><img src="http://upload-images.jianshu.io/upload_images/2510928-da57db9a1687ec70.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="数据迁移成功"></p>
+<p>使用方式该git上面介绍的很详细了，不再赘述。<br>感谢前辈们的无私分享。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://hwzhang.top/2017/03/21/sqlite-greendao3/#comments" class="article-comment-link ds-thread-count" data-thread-key="http://hwzhang.top/2017/03/21/sqlite-greendao3/">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2017/03/21/android-ndk-base/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    Android Studio之NDK环境搭建，so文件打包以及使用
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2017/03/21/SlidingMenu/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">android studio 下使用SlidingMenu侧滑菜单</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    <section id="comments">
+    
+        
+    <div class="ds-thread" data-thread-key="2017/03/21/sqlite-greendao3/" data-title="greenDAO3 入门（配置，基本操作，数据库升级）" data-url="http://hwzhang.top/2017/03/21/sqlite-greendao3/"></div>
+    <style>
+        #ds-thread #ds-reset .ds-textarea-wrapper {
+            background: none;
+        }
+        #ds-reset .ds-avatar img {
+            box-shadow: none;
+        }
+        #ds-reset .ds-gradient-bg {
+            background: #f7f7f7;
+        }
+        #ds-thread #ds-reset li.ds-tab a {
+            border-radius: 3px;
+        }
+        #ds-thread #ds-reset .ds-post-button {
+            color: white;
+            border: none;
+            box-shadow: none;
+            background: #d32;
+            text-shadow: none;
+            font-weight: normal;
+            font-family: 'Microsoft Yahei';
+        }
+        #ds-thread #ds-reset .ds-post-button:hover {
+            color: white;
+            background: #DE594C;
+        }
+        #ds-thread #ds-reset .ds-post-button:active {
+            background: #d32;
+        }
+        #ds-smilies-tooltip ul.ds-smilies-tabs li a.ds-current {
+            color: white;
+            background: #d32;
+            box-shadow: none;
+            text-shadow: none;
+            font-weight: normal;
+        }
+    </style>
+
+    
+    </section>
+
+</section>
+            
+                <aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/03/21/android-ndk-base/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://upload-images.jianshu.io/upload_images/2510928-69ba6a978248728a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)" alt="Android Studio之NDK环境搭建，so文件打包以及使用" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2017/03/21/android-ndk-base/" class="title">Android Studio之NDK环境搭建，so文件打包以及使用</a></p>
+                            <p class="item-date"><time datetime="2017-03-21T14:12:33.000Z" itemprop="datePublished">2017-03-21</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/03/21/sqlite-greendao3/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://upload-images.jianshu.io/upload_images/2510928-da57db9a1687ec70.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)" alt="greenDAO3 入门（配置，基本操作，数据库升级）" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2017/03/21/sqlite-greendao3/" class="title">greenDAO3 入门（配置，基本操作，数据库升级）</a></p>
+                            <p class="item-date"><time datetime="2017-03-21T13:13:43.000Z" itemprop="datePublished">2017-03-21</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/03/21/SlidingMenu/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://o930uobjh.bkt.clouddn.com/WX20170309-164649@2x.png)" alt="android studio 下使用SlidingMenu侧滑菜单" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2017/03/21/SlidingMenu/" class="title">android studio 下使用SlidingMenu侧滑菜单</a></p>
+                            <p class="item-date"><time datetime="2017-03-21T12:47:00.000Z" itemprop="datePublished">2017-03-21</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/03/21/RecyclerView-multiple-item-type/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://upload-images.jianshu.io/upload_images/2510928-478b85ab1c69f700.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)" alt="RecyclerView 多布局，Item中使用EditText刷新问题扫坑" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2017/03/21/RecyclerView-multiple-item-type/" class="title">RecyclerView 多布局，Item中使用EditText刷新问题扫坑</a></p>
+                            <p class="item-date"><time datetime="2017-03-21T09:54:39.000Z" itemprop="datePublished">2017-03-21</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2016/09/13/wifi-dev/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://o930uobjh.bkt.clouddn.com/wifi_state.png)" alt="android Wifi 相关" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2016/09/13/wifi-dev/" class="title">android Wifi 相关</a></p>
+                            <p class="item-date"><time datetime="2016-09-13T15:05:02.000Z" itemprop="datePublished">2016-09-13</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">2</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/NDK、JNI/">NDK、JNI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android-unwidget-study/">android-unwidget-study</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android-widget-study/">android-widget-study</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android-开源项目学习/">android-开源项目学习</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android开发工具/">android开发工具</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android第三方接入/">android第三方接入</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/">sqlite</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/NDK、JNI/" style="font-size: 10px;">NDK、JNI</a> <a href="/tags/android-unwidget-study/" style="font-size: 10px;">android-unwidget-study</a> <a href="/tags/android-widget-study/" style="font-size: 20px;">android-widget-study</a> <a href="/tags/android-开源项目学习/" style="font-size: 10px;">android-开源项目学习</a> <a href="/tags/android开发工具/" style="font-size: 10px;">android开发工具</a> <a href="/tags/android第三方接入/" style="font-size: 20px;">android第三方接入</a> <a href="/tags/sqlite/" style="font-size: 10px;">sqlite</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://www.jianshu.com/u/bc439f0553f4">我的简书</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2017 David-zhw<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'hwzhang'};
+    (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
