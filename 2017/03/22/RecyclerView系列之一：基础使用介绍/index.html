@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>RecyclerView系列之一：基础使用介绍 | David&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="概述
+关于RecyclerView，官方介绍：A flexible view for providing a limited window into a large data set.   RecyclerView是一种能够利用有限窗口展现大型数据集的灵活视图。
+同ListView类似，它具有自动回收ItemView的特性。但是相比ListView，RecyclerView到底有了哪些有点呢？
+本">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RecyclerView系列之一：基础使用介绍">
+<meta property="og:url" content="http://hwzhang.top/2017/03/22/RecyclerView系列之一：基础使用介绍/index.html">
+<meta property="og:site_name" content="David's Blog">
+<meta property="og:description" content="概述
+关于RecyclerView，官方介绍：A flexible view for providing a limited window into a large data set.   RecyclerView是一种能够利用有限窗口展现大型数据集的灵活视图。
+同ListView类似，它具有自动回收ItemView的特性。但是相比ListView，RecyclerView到底有了哪些有点呢？
+本">
+<meta property="og:updated_time" content="2017-03-28T09:58:45.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RecyclerView系列之一：基础使用介绍">
+<meta name="twitter:description" content="概述
+关于RecyclerView，官方介绍：A flexible view for providing a limited window into a large data set.   RecyclerView是一种能够利用有限窗口展现大型数据集的灵活视图。
+同ListView类似，它具有自动回收ItemView的特性。但是相比ListView，RecyclerView到底有了哪些有点呢？
+本">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">David&#39;s Blog</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">Home</a>
+                
+                    <a class="main-nav-link" href="/archives">Archives</a>
+                
+                    <a class="main-nav-link" href="/categories">Categories</a>
+                
+                    <a class="main-nav-link" href="/tags">Tags</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="http://tva4.sinaimg.cn/crop.0.0.640.640.180/b062d405jw8f5tjwccbkxj20hs0hswf7.jpg" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">Home</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">Archives</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">Categories</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">Tags</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="http://tva4.sinaimg.cn/crop.0.0.640.640.180/b062d405jw8f5tjwccbkxj20hs0hswf7.jpg" />
+            <h2 id="name">heweizhang</h2>
+            <h3 id="title">Android Application Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>XiaMen, China</span>
+            <a id="follow" target="_blank" href="http://www.jianshu.com/u/bc439f0553f4">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                10
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                7
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/heweizhang" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="http://weibo.com/u/2959266821" target="_blank" title="weibo" class=tooltip>
+                            <i class="fa fa-weibo"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/17505926606@163.com" target="_blank" title="email" class=tooltip>
+                            <i class="fa fa-email"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-RecyclerView系列之一：基础使用介绍" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            RecyclerView系列之一：基础使用介绍
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/03/22/RecyclerView系列之一：基础使用介绍/">
+            <time datetime="2017-03-22T08:58:51.000Z" itemprop="datePublished">2017-03-22</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/android-widget-study/">android-widget-study</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><blockquote>
+<h4 id="关于RecyclerView，官方介绍：A-flexible-view-for-providing-a-limited-window-into-a-large-data-set-RecyclerView是一种能够利用有限窗口展现大型数据集的灵活视图。"><a href="#关于RecyclerView，官方介绍：A-flexible-view-for-providing-a-limited-window-into-a-large-data-set-RecyclerView是一种能够利用有限窗口展现大型数据集的灵活视图。" class="headerlink" title="关于RecyclerView，官方介绍：A flexible view for providing a limited window into a large data set.   RecyclerView是一种能够利用有限窗口展现大型数据集的灵活视图。"></a>关于RecyclerView，官方介绍：A flexible view for providing a limited window into a large data set.   RecyclerView是一种能够利用有限窗口展现大型数据集的灵活视图。</h4></blockquote>
+<p>同ListView类似，它具有自动回收ItemView的特性。但是相比ListView，RecyclerView到底有了哪些有点呢？</p>
+<h4 id="本系列文章将从RecyclerView的使用，RecyclerView-Adapter的封装，源码分析等多个部分来让大家较深入的了解这个强大的控件"><a href="#本系列文章将从RecyclerView的使用，RecyclerView-Adapter的封装，源码分析等多个部分来让大家较深入的了解这个强大的控件" class="headerlink" title="本系列文章将从RecyclerView的使用，RecyclerView.Adapter的封装，源码分析等多个部分来让大家较深入的了解这个强大的控件"></a>本系列文章将从RecyclerView的使用，RecyclerView.Adapter的封装，源码分析等多个部分来让大家较深入的了解这个强大的控件</h4><p>本RecyclerView系列初步规划内容大致如下，源码托管在github上：  </p>
+<ul>
+<li>基础使用介绍(结合CardView)</li>
+<li>item刷新动画、item view点击监听</li>
+<li>多布局使用</li>
+<li>adapter封装</li>
+<li>下拉刷新，上拉加载</li>
+<li>Item侧滑删除，置顶，长按拖拽Item</li>
+<li>加载中界面</li>
+<li>RecyclerView源码分析</li>
+</ul>
+<hr>
+<h3 id="本节主要介绍RecyclerView的基本使用，内容主要包括3点："><a href="#本节主要介绍RecyclerView的基本使用，内容主要包括3点：" class="headerlink" title="本节主要介绍RecyclerView的基本使用，内容主要包括3点："></a>本节主要介绍RecyclerView的基本使用，内容主要包括3点：</h3><ol>
+<li>RecyclerView的引入，结合CardView</li>
+<li>LayoutManager 配置，Item的3种布局方式，横向、竖向以及瀑布流方式。</li>
+<li>RecyclerView.Adapter 介绍</li>
+</ol>
+<h4 id="1、RecyclerView，CardView引入："><a href="#1、RecyclerView，CardView引入：" class="headerlink" title="1、RecyclerView，CardView引入："></a>1、RecyclerView，CardView引入：</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//compile版本对照 build.gradle 中的 targetSdkVersion</span></div><div class="line">compile <span class="string">'com.android.support:recyclerview-v7:25.0.1'</span> </div><div class="line">compile <span class="string">'com.android.support:cardview-v7:25.0.1'</span></div></pre></td></tr></table></figure>
+<h4 id="2、先创建布局文件"><a href="#2、先创建布局文件" class="headerlink" title="2、先创建布局文件"></a>2、先创建布局文件</h4><p>RecyclerView布局如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">//activity_demo.xml</div><div class="line"></div><div class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</div><div class="line">&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</div><div class="line">    android:orientation=&quot;vertical&quot; android:layout_width=&quot;match_parent&quot;</div><div class="line">    android:layout_height=&quot;match_parent&quot;&gt;</div><div class="line">    &lt;android.support.v7.widget.RecyclerView</div><div class="line">        android:id=&quot;@+id/recyclerView&quot;</div><div class="line">        android:layout_width=&quot;match_parent&quot;</div><div class="line">        android:layout_height=&quot;match_parent&quot;&gt;</div><div class="line">    &lt;/android.support.v7.widget.RecyclerView&gt;</div><div class="line">&lt;/LinearLayout&gt;</div></pre></td></tr></table></figure></p>
+<p>CardView布局如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line">//item_tv_list.xml</div><div class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</div><div class="line">&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</div><div class="line">    xmlns:app=&quot;http://schemas.android.com/apk/res-auto&quot;</div><div class="line">    android:layout_width=&quot;match_parent&quot;</div><div class="line">    android:layout_height=&quot;wrap_content&quot;</div><div class="line">    android:orientation=&quot;vertical&quot;&gt;</div><div class="line"></div><div class="line">    &lt;android.support.v7.widget.CardView</div><div class="line">        android:layout_width=&quot;match_parent&quot;</div><div class="line">        android:layout_height=&quot;wrap_content&quot;</div><div class="line">        android:clickable=&quot;true&quot; //可点击</div><div class="line">        android:layout_margin=&quot;10dp&quot;</div><div class="line">        android:foreground=&quot;?android:attr/selectableItemBackground&quot;//点击效果，不适用cardView的话 可以在item父布局中添加shape来实现</div><div class="line">        app:cardCornerRadius=&quot;@dimen/cardview_radius&quot;</div><div class="line">        app:contentPadding=&quot;10dp&quot;</div><div class="line">        app:cardElevation=&quot;@dimen/cardview_elevation&quot;&gt;</div><div class="line"></div><div class="line">        &lt;LinearLayout</div><div class="line">            android:layout_width=&quot;match_parent&quot;</div><div class="line">            android:layout_height=&quot;wrap_content&quot;</div><div class="line">            android:orientation=&quot;vertical&quot;&gt;</div><div class="line"></div><div class="line">            &lt;ImageView</div><div class="line">                android:id=&quot;@+id/iv_pic&quot;</div><div class="line">                android:layout_width=&quot;match_parent&quot;</div><div class="line">                android:layout_height=&quot;180dp&quot;</div><div class="line">                android:scaleType=&quot;centerCrop&quot;</div><div class="line">                android:src=&quot;@drawable/abc1&quot; /&gt;</div><div class="line"></div><div class="line">            &lt;TextView</div><div class="line">                android:id=&quot;@+id/tv_content&quot;</div><div class="line">                android:layout_width=&quot;match_parent&quot;</div><div class="line">                android:layout_height=&quot;wrap_content&quot;</div><div class="line">                android:padding=&quot;5dp&quot;</div><div class="line">                android:text=&quot;@string/op_subtext&quot; /&gt;</div><div class="line"></div><div class="line">        &lt;/LinearLayout&gt;</div><div class="line"></div><div class="line">    &lt;/android.support.v7.widget.CardView&gt;</div><div class="line">&lt;/LinearLayout&gt;</div></pre></td></tr></table></figure></p>
+<h5 id="CardView-属性说明"><a href="#CardView-属性说明" class="headerlink" title="CardView 属性说明"></a>CardView 属性说明</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">card_view:cardElevation	        阴影的大小</div><div class="line">card_view:cardMaxElevation	阴影最大值</div><div class="line">card_view:cardBackgroundCollor	卡片的背景色</div><div class="line">card_view:cardCornerRadius	卡片的圆角大小</div><div class="line">card_view:contentPadding	卡片内容与边距的间隔</div><div class="line">card_view:contentPaddingBottom	卡片内容与底部的间隔</div><div class="line">card_view:contentPaddingTop	卡片内容与顶部的间隔</div><div class="line">card_view:contentPaddingLeft	卡片内容与左边的间隔</div><div class="line">card_view:contentPaddingRight	卡片内容与右边的间隔</div><div class="line">card_view:contentPaddingStart</div><div class="line">card_view:contentPaddingEnd</div></pre></td></tr></table></figure>
+<h4 id="3、初始化Activity、创建RecycleView-Adapter"><a href="#3、初始化Activity、创建RecycleView-Adapter" class="headerlink" title="3、初始化Activity、创建RecycleView.Adapter"></a>3、初始化Activity、创建RecycleView.Adapter</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//DemoActivity.java        </span></div><div class="line">LinearLayoutManager linearLayout = <span class="keyword">new</span> LinearLayoutManager(<span class="keyword">this</span>);</div><div class="line"><span class="comment">//横向    </span></div><div class="line"><span class="comment">//linearLayout.setOrientation(LinearLayoutManager.HORIZONTAL);</span></div><div class="line">linearLayout.setOrientation(LinearLayoutManager.VERTICAL);</div><div class="line">ListAdapter adapter = <span class="keyword">new</span> ListAdapter(<span class="keyword">this</span>, initData());</div><div class="line">recyclerView.setLayoutManager(linearLayout);</div><div class="line">recyclerView.setAdapter(adapter);</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.david.xrecyclerview.adapter;</div><div class="line"></div><div class="line"><span class="keyword">import</span> android.content.Context;</div><div class="line"><span class="keyword">import</span> android.support.v7.widget.RecyclerView;</div><div class="line"><span class="keyword">import</span> android.view.LayoutInflater;</div><div class="line"><span class="keyword">import</span> android.view.View;</div><div class="line"><span class="keyword">import</span> android.view.ViewGroup;</div><div class="line"><span class="keyword">import</span> android.widget.ImageView;</div><div class="line"><span class="keyword">import</span> android.widget.TextView;</div><div class="line"></div><div class="line"><span class="keyword">import</span> com.bumptech.glide.Glide;</div><div class="line"><span class="keyword">import</span> com.david.xrecyclerview.R;</div><div class="line"><span class="keyword">import</span> com.david.xrecyclerview.entity.DemoBean;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.util.List;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * Created by david on 17/3/28.</div><div class="line"> */</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListAdapter</span> <span class="keyword">extends</span> <span class="title">RecyclerView</span>.<span class="title">Adapter</span>&lt;<span class="title">RecyclerView</span>.<span class="title">ViewHolder</span>&gt; </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> Context context;</div><div class="line">    <span class="keyword">private</span> List&lt;DemoBean&gt; data;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ListAdapter</span><span class="params">(Context context, List&lt;DemoBean&gt; data)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.context = context;</div><div class="line">        <span class="keyword">this</span>.data = data;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//绑定布局，注意返回值是viewHolder 而非view</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="keyword">public</span> RecyclerView.<span class="function">ViewHolder <span class="title">onCreateViewHolder</span><span class="params">(ViewGroup parent, <span class="keyword">int</span> viewType)</span> </span>&#123;</div><div class="line">        View view = LayoutInflater.from(context).inflate(R.layout.item_rv_list, parent, <span class="keyword">false</span>);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ItemViewHolder(view);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//赋值操作</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onBindViewHolder</span><span class="params">(RecyclerView.ViewHolder holder, <span class="keyword">int</span> position)</span> </span>&#123;</div><div class="line"></div><div class="line">        Glide.with(context).load(data.get(position).getImageId()).into(((ItemViewHolder) holder).iv_pic);</div><div class="line">        ((ItemViewHolder) holder).tv_content.setText(data.get(position).getContent());</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//item 个数</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getItemCount</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> data == <span class="keyword">null</span> ? <span class="number">0</span> : data.size();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//类似ListView中的ViewHolder，只不过在RecyclerView中强制实现</span></div><div class="line">    <span class="class"><span class="keyword">class</span> <span class="title">ItemViewHolder</span> <span class="keyword">extends</span> <span class="title">RecyclerView</span>.<span class="title">ViewHolder</span> </span>&#123;</div><div class="line">        <span class="keyword">private</span> ImageView iv_pic;</div><div class="line">        <span class="keyword">private</span> TextView tv_content;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="title">ItemViewHolder</span><span class="params">(View itemView)</span> </span>&#123;</div><div class="line">            <span class="keyword">super</span>(itemView);</div><div class="line">            iv_pic = (ImageView) itemView.findViewById(R.id.iv_pic);</div><div class="line">            tv_content = (TextView) itemView.findViewById(R.id.tv_content);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="到此我们已经成功的配合CardView，实现了最简单的使用"><a href="#到此我们已经成功的配合CardView，实现了最简单的使用" class="headerlink" title="到此我们已经成功的配合CardView，实现了最简单的使用"></a>到此我们已经成功的配合CardView，实现了最简单的使用</h4><h2 id=""><a href="#" class="headerlink" title=""></a><iframe height="498" width="510" src="http://o930uobjh.bkt.clouddn.com/QQ20170328-175309-HD.mp4" frameborder="0" allowfullscreen></iframe></h2>
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://hwzhang.top/2017/03/22/RecyclerView系列之一：基础使用介绍/#comments" class="article-comment-link ds-thread-count" data-thread-key="http://hwzhang.top/2017/03/22/RecyclerView系列之一：基础使用介绍/">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2017/03/21/android-ndk-base/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">Android Studio之NDK环境搭建，so文件打包以及使用</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    <section id="comments">
+    
+        
+    <div class="ds-thread" data-thread-key="2017/03/22/RecyclerView系列之一：基础使用介绍/" data-title="RecyclerView系列之一：基础使用介绍" data-url="http://hwzhang.top/2017/03/22/RecyclerView系列之一：基础使用介绍/"></div>
+    <style>
+        #ds-thread #ds-reset .ds-textarea-wrapper {
+            background: none;
+        }
+        #ds-reset .ds-avatar img {
+            box-shadow: none;
+        }
+        #ds-reset .ds-gradient-bg {
+            background: #f7f7f7;
+        }
+        #ds-thread #ds-reset li.ds-tab a {
+            border-radius: 3px;
+        }
+        #ds-thread #ds-reset .ds-post-button {
+            color: white;
+            border: none;
+            box-shadow: none;
+            background: #d32;
+            text-shadow: none;
+            font-weight: normal;
+            font-family: 'Microsoft Yahei';
+        }
+        #ds-thread #ds-reset .ds-post-button:hover {
+            color: white;
+            background: #DE594C;
+        }
+        #ds-thread #ds-reset .ds-post-button:active {
+            background: #d32;
+        }
+        #ds-smilies-tooltip ul.ds-smilies-tabs li a.ds-current {
+            color: white;
+            background: #d32;
+            box-shadow: none;
+            text-shadow: none;
+            font-weight: normal;
+        }
+    </style>
+
+    
+    </section>
+
+</section>
+            
+                <aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/03/22/RecyclerView系列之一：基础使用介绍/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2017/03/22/RecyclerView系列之一：基础使用介绍/" class="title">RecyclerView系列之一：基础使用介绍</a></p>
+                            <p class="item-date"><time datetime="2017-03-22T08:58:51.000Z" itemprop="datePublished">2017-03-22</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/03/21/android-ndk-base/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://upload-images.jianshu.io/upload_images/2510928-69ba6a978248728a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)" alt="Android Studio之NDK环境搭建，so文件打包以及使用" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Android/">Android</a></p>
+                            <p class="item-title"><a href="/2017/03/21/android-ndk-base/" class="title">Android Studio之NDK环境搭建，so文件打包以及使用</a></p>
+                            <p class="item-date"><time datetime="2017-03-21T14:12:33.000Z" itemprop="datePublished">2017-03-21</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/03/21/sqlite-greendao3/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://upload-images.jianshu.io/upload_images/2510928-da57db9a1687ec70.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)" alt="greenDAO3 入门（配置，基本操作，数据库升级）" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Android/">Android</a></p>
+                            <p class="item-title"><a href="/2017/03/21/sqlite-greendao3/" class="title">greenDAO3 入门（配置，基本操作，数据库升级）</a></p>
+                            <p class="item-date"><time datetime="2017-03-21T13:13:43.000Z" itemprop="datePublished">2017-03-21</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/03/21/SlidingMenu/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://o930uobjh.bkt.clouddn.com/WX20170309-164649@2x.png)" alt="android studio 下使用SlidingMenu侧滑菜单" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Android/">Android</a></p>
+                            <p class="item-title"><a href="/2017/03/21/SlidingMenu/" class="title">android studio 下使用SlidingMenu侧滑菜单</a></p>
+                            <p class="item-date"><time datetime="2017-03-21T12:47:00.000Z" itemprop="datePublished">2017-03-21</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/03/21/RecyclerView-multiple-item-type/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://upload-images.jianshu.io/upload_images/2510928-478b85ab1c69f700.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)" alt="RecyclerView 多布局，Item中使用EditText刷新问题扫坑" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Android/">Android</a></p>
+                            <p class="item-title"><a href="/2017/03/21/RecyclerView-multiple-item-type/" class="title">RecyclerView 多布局，Item中使用EditText刷新问题扫坑</a></p>
+                            <p class="item-date"><time datetime="2017-03-21T09:54:39.000Z" itemprop="datePublished">2017-03-21</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a><span class="category-list-count">9</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">2</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/NDK、JNI/">NDK、JNI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android-unwidget-study/">android-unwidget-study</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android-widget-study/">android-widget-study</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android-开源项目学习/">android-开源项目学习</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android开发工具/">android开发工具</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android第三方接入/">android第三方接入</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/">sqlite</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/NDK、JNI/" style="font-size: 10px;">NDK、JNI</a> <a href="/tags/android-unwidget-study/" style="font-size: 10px;">android-unwidget-study</a> <a href="/tags/android-widget-study/" style="font-size: 20px;">android-widget-study</a> <a href="/tags/android-开源项目学习/" style="font-size: 10px;">android-开源项目学习</a> <a href="/tags/android开发工具/" style="font-size: 10px;">android开发工具</a> <a href="/tags/android第三方接入/" style="font-size: 15px;">android第三方接入</a> <a href="/tags/sqlite/" style="font-size: 10px;">sqlite</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://www.jianshu.com/u/bc439f0553f4">我的简书</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2017 David-zhw<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'hwzhang'};
+    (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
