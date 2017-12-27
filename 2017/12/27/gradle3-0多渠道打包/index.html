@@ -3,26 +3,29 @@
 <head>
     <meta charset="utf-8">
     
-    <title>RecyclerView 多布局，Item中使用EditText刷新问题扫坑 | David&#39;s Blog</title>
+    <title>gradle3.0多渠道打包 | David&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="项目中需要用到一个高度动态的布局用于录入用户信息，信息类型以及参数字段等全来自后台。因此需要用RecyclerView来动态显示，同时使用Item多布局来对应不同类型的信息录入（log：提前已知所有可能输入的类型），这里记录一下自己的解决方式，以及item中使用EditText碰到的问题（欢迎吐槽，互相交流）
-先来看下需要实现的界面效果   
-这里可以看到尾巴上一步，下一步布局也通过占用一个ite">
+    <meta name="description" content="android开发中常常会碰到开发环境与生产环境接口地址使用不同域名的情况、甚至要求debug包与release包不同包名，其实这些都可以通过gradle来帮我们完成，再也不用手动改代码，拒绝麻烦与出错，了解gralde的用法，有助于提升生产力。这里仅记录自己开发中碰到的问题及解决方式结合使用场景与实际操作
+动态改变接口地址
+release与debug版本不同包名
+debug使用release版本">
 <meta property="og:type" content="article">
-<meta property="og:title" content="RecyclerView 多布局，Item中使用EditText刷新问题扫坑">
-<meta property="og:url" content="http://hwzhang.top/2017/03/21/RecyclerView-multiple-item-type/index.html">
+<meta property="og:title" content="gradle3.0多渠道打包">
+<meta property="og:url" content="http://hwzhang.top/2017/12/27/gradle3-0多渠道打包/index.html">
 <meta property="og:site_name" content="David's Blog">
-<meta property="og:description" content="项目中需要用到一个高度动态的布局用于录入用户信息，信息类型以及参数字段等全来自后台。因此需要用RecyclerView来动态显示，同时使用Item多布局来对应不同类型的信息录入（log：提前已知所有可能输入的类型），这里记录一下自己的解决方式，以及item中使用EditText碰到的问题（欢迎吐槽，互相交流）
-先来看下需要实现的界面效果   
-这里可以看到尾巴上一步，下一步布局也通过占用一个ite">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2510928-478b85ab1c69f700.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2017-03-22T04:01:06.000Z">
+<meta property="og:description" content="android开发中常常会碰到开发环境与生产环境接口地址使用不同域名的情况、甚至要求debug包与release包不同包名，其实这些都可以通过gradle来帮我们完成，再也不用手动改代码，拒绝麻烦与出错，了解gralde的用法，有助于提升生产力。这里仅记录自己开发中碰到的问题及解决方式结合使用场景与实际操作
+动态改变接口地址
+release与debug版本不同包名
+debug使用release版本">
+<meta property="og:image" content="http://o930uobjh.bkt.clouddn.com/QQ20171227-162120.png">
+<meta property="og:updated_time" content="2017-12-27T09:35:38.732Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="RecyclerView 多布局，Item中使用EditText刷新问题扫坑">
-<meta name="twitter:description" content="项目中需要用到一个高度动态的布局用于录入用户信息，信息类型以及参数字段等全来自后台。因此需要用RecyclerView来动态显示，同时使用Item多布局来对应不同类型的信息录入（log：提前已知所有可能输入的类型），这里记录一下自己的解决方式，以及item中使用EditText碰到的问题（欢迎吐槽，互相交流）
-先来看下需要实现的界面效果   
-这里可以看到尾巴上一步，下一步布局也通过占用一个ite">
-<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2510928-478b85ab1c69f700.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:title" content="gradle3.0多渠道打包">
+<meta name="twitter:description" content="android开发中常常会碰到开发环境与生产环境接口地址使用不同域名的情况、甚至要求debug包与release包不同包名，其实这些都可以通过gradle来帮我们完成，再也不用手动改代码，拒绝麻烦与出错，了解gralde的用法，有助于提升生产力。这里仅记录自己开发中碰到的问题及解决方式结合使用场景与实际操作
+动态改变接口地址
+release与debug版本不同包名
+debug使用release版本">
+<meta name="twitter:image" content="http://o930uobjh.bkt.clouddn.com/QQ20171227-162120.png">
     
 
     
@@ -199,7 +202,7 @@
 </aside>
 
             
-            <section id="main"><article id="post-RecyclerView-multiple-item-type" class="article article-type-post" itemscope itemprop="blogPost">
+            <section id="main"><article id="post-gradle3-0多渠道打包" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
         
@@ -207,7 +210,7 @@
                 
     
         <h1 class="article-title" itemprop="name">
-            RecyclerView 多布局，Item中使用EditText刷新问题扫坑
+            gradle3.0多渠道打包
         </h1>
     
 
@@ -216,8 +219,8 @@
                         
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/2017/03/21/RecyclerView-multiple-item-type/">
-            <time datetime="2017-03-21T09:54:39.000Z" itemprop="datePublished">2017-03-21</time>
+        <a href="/2017/12/27/gradle3-0多渠道打包/">
+            <time datetime="2017-12-27T09:33:43.000Z" itemprop="datePublished">2017-12-27</time>
         </a>
     </div>
 
@@ -231,7 +234,7 @@
                         
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/android-widget-study/">android-widget-study</a>
+        <a class="tag-link" href="/tags/gradle/">gradle</a>
     </div>
 
                     </div>
@@ -242,23 +245,35 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-            <p><em>项目中需要用到一个高度动态的布局用于录入用户信息，信息类型以及参数字段等全来自后台。因此需要用RecyclerView来动态显示，同时使用Item多布局来对应不同类型的信息录入（log：提前已知所有可能输入的类型），这里记录一下自己的解决方式，以及item中使用EditText碰到的问题（欢迎吐槽，互相交流）</em></p>
-<h5 id="先来看下需要实现的界面效果"><a href="#先来看下需要实现的界面效果" class="headerlink" title="先来看下需要实现的界面效果"></a>先来看下需要实现的界面效果</h5><p><img src="http://upload-images.jianshu.io/upload_images/2510928-478b85ab1c69f700.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="整体布局结构.png">   </p>
-<p>这里可以看到尾巴上一步，下一步布局也通过占用一个item的方式来实现footerView的效果，从图中可以直观的看出当前页面一共有3种布局，其中item_type_1中用到了EditText，item_type_2中使用TextView来展示地址选择结果，item_type_3使用两个TextView来制作按钮。</p>
-<h3 id="一、RecyclerView多布局的使用"><a href="#一、RecyclerView多布局的使用" class="headerlink" title="一、RecyclerView多布局的使用"></a>一、RecyclerView多布局的使用</h3><p>没错，还是老套路，重点一定在Adapter，并且这里会使用到getItemViewType（）方法来指定待显示的item布局。这里为了简单明了，直接使用未封装的 RecyclerView.Adapter。重要代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">//一共5种布局</div><div class="line">private static final int TYPE_EDITTEXT = 1;//editText布局</div><div class="line">private static final int TYPE_EDITADDRESS = 2;//地址选择器布局</div><div class="line">private static final int TYPE_GETCODE = 3;//动态获取数据（信息选择器）</div><div class="line">private static final int TYPE_EDITIDCARD = 4;//身份信息提交布局</div><div class="line">private static final int TYPE_FOOTERVIEW = 5;//底部下一步 布局</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">//通过重写getItemViewType(int position)方法来告诉onCreateViewHolder(...)每个条目对应的布局</div><div class="line">    @Override</div><div class="line">public int getItemViewType(int position) &#123;</div><div class="line">    switch (fieldsList.get(position).getInput_type()) &#123;</div><div class="line">            case 1:</div><div class="line">                return TYPE_EDITTEXT;</div><div class="line">            case 2:</div><div class="line">                return TYPE_EDITADDRESS;</div><div class="line">            case ...</div><div class="line">     &#125;</div><div class="line"></div><div class="line">     return TYPE_FOOTERVIEW;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">//返回不同布局对应的ViewHolder</div><div class="line">    @Override</div><div class="line">    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) &#123;</div><div class="line">        switch (viewType) &#123;</div><div class="line">            case TYPE_EDITTEXT:</div><div class="line">                return new EditTextItemHolder(LayoutInflater.from(context).inflate(R.layout.item_rv_type_edittext, parent, false));</div><div class="line">            case TYPE_EDITADDRESS:</div><div class="line">                return new EditAddRessItemHolder(LayoutInflater.from(context).inflate(R.layout.item_rv_type_editaddress, parent, false));</div><div class="line">            case ...</div><div class="line">        &#125;</div><div class="line">        return new FooterViewHolder(LayoutInflater.from(context).inflate(R.layout.item_rv_type_footview, parent, false));</div><div class="line">    &#125;  </div><div class="line"></div><div class="line">//当然，每种item都需要有自己的ViewHolder</div><div class="line">class EditIDCardItemHolder extends RecyclerView.ViewHolder &#123;</div><div class="line"></div><div class="line">    public EditIDCardItemHolder(View itemView) &#123;</div><div class="line">        super(itemView);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">//onBindViewHolder()中绑定数据 也需要知道当前布局属于哪个item</div><div class="line"> @Override</div><div class="line">    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) &#123;</div><div class="line">        final FieldInfoBean bean = fieldsList.get(position);</div><div class="line"></div><div class="line">        if (holder instanceof EditTextItemHolder) &#123;</div><div class="line">            ...</div><div class="line">        &#125; </div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-<p>是不是发现RecyclerView的多布局实现其实也是十分简单呢。</p>
-<h3 id="二、RecyclerView中使用EditText"><a href="#二、RecyclerView中使用EditText" class="headerlink" title="二、RecyclerView中使用EditText"></a>二、RecyclerView中使用EditText</h3><p>网上看到博友在ListView中使用EditText时，点击editText后软键盘弹出后会导致光标失去焦点，这里我在使用RecyclerView的时候并没有发现光标问题，这里先跳过光标问题。   </p>
-<h5 id="使用EditText是主要问题在于如何获取到EditText的值，以及刷新adapter时，出现editText值错乱"><a href="#使用EditText是主要问题在于如何获取到EditText的值，以及刷新adapter时，出现editText值错乱" class="headerlink" title="使用EditText是主要问题在于如何获取到EditText的值，以及刷新adapter时，出现editText值错乱"></a>使用EditText是主要问题在于如何获取到EditText的值，以及刷新adapter时，出现editText值错乱</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">//可能是由于RecyclerView的回收，无法使用getView（）.getText()来获取EditText的值</div><div class="line">//很多博友也是使用了addTextChangedListener（watcher()）的方式来获取用户输入的值，并且需要及时的保存数据</div><div class="line">       TextWatcher watcher = new TextWatcher() &#123;</div><div class="line">                @Override</div><div class="line">                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) &#123;</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                @Override</div><div class="line">                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) &#123;</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                @Override</div><div class="line">                public void afterTextChanged(Editable editable) &#123;</div><div class="line">                    if (TextUtils.isEmpty(editable.toString())) &#123;</div><div class="line">                        bean.setValue(&quot;&quot;);</div><div class="line">                    &#125; else &#123;</div><div class="line">                        bean.setValue(editable.toString());</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;;</div><div class="line">            </div><div class="line">            ((EditTextItemHolder)holder).et_text.addTextChangedListener(watcher);</div></pre></td></tr></table></figure>
-<h5 id="上述操作方式其实给自己埋了一个坑，仅仅操作EditText时并没有什么反常，而当我需要调用Adapter的刷新方法时候一个大坑等着我们…"><a href="#上述操作方式其实给自己埋了一个坑，仅仅操作EditText时并没有什么反常，而当我需要调用Adapter的刷新方法时候一个大坑等着我们…" class="headerlink" title="上述操作方式其实给自己埋了一个坑，仅仅操作EditText时并没有什么反常，而当我需要调用Adapter的刷新方法时候一个大坑等着我们…"></a>上述操作方式其实给自己埋了一个坑，仅仅操作EditText时并没有什么反常，而当我需要调用Adapter的刷新方法时候一个大坑等着我们…</h5><p>常用的刷新方式有以下两种：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">adapter.notifyItemChanged(pos);//仅刷新单个item</div><div class="line">adapter.notifyDataSetChanged();//刷新整个adapter  否则选中省信息后，市信息不能回归默认</div></pre></td></tr></table></figure>
-<p>得益于RecyclerView的优化，相比于ListView增加了单个item刷新操作，所以在项目中当我仅需刷新单个item时并没有异常，textWatcher 工作的很正常  </p>
-<p><em>当我使用多级联动时候，由于每一级分处不同的item，所以我不得不调用第二种方式去刷新整个item（虽然我也可以多次调用第一种方式，这里讨论必须全部刷新的情况下），刷新完之后发现zheng’ge整个List<string> 混乱了，数据错乱，而我发现仅仅是使用了EditText的地方出错，并且是在使用了TextWatcher的item，似乎找到了问题的根源…</string></em></p>
-<h6 id="于是，果断开启debug模式，最终确认确实是TextWatcher的问题，由于调用了notifyDataSetChanged（）方法，而导致EditText重绘，并且每次都走了textWatcher的afterTextChanged（）方法，于是网上查了资料，最终顺利解决了问题。记录如下："><a href="#于是，果断开启debug模式，最终确认确实是TextWatcher的问题，由于调用了notifyDataSetChanged（）方法，而导致EditText重绘，并且每次都走了textWatcher的afterTextChanged（）方法，于是网上查了资料，最终顺利解决了问题。记录如下：" class="headerlink" title="于是，果断开启debug模式，最终确认确实是TextWatcher的问题，由于调用了notifyDataSetChanged（）方法，而导致EditText重绘，并且每次都走了textWatcher的afterTextChanged（）方法，于是网上查了资料，最终顺利解决了问题。记录如下："></a>于是，果断开启debug模式，最终确认确实是TextWatcher的问题，由于调用了notifyDataSetChanged（）方法，而导致EditText重绘，并且每次都走了textWatcher的afterTextChanged（）方法，于是网上查了资料，最终顺利解决了问题。记录如下：</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">//完整代码</div><div class="line">       if (holder instanceof EditTextItemHolder) &#123;</div><div class="line">            //1、为了避免TextWatcher在第2步被调用，提前将他移除。</div><div class="line">            if (((EditTextItemHolder) holder).et_text.getTag() instanceof TextWatcher) &#123;</div><div class="line">                ((EditTextItemHolder) holder).et_text.removeTextChangedListener((TextWatcher) (((EditTextItemHolder) holder).et_text.getTag()));</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            </div><div class="line">            // 第2步：移除TextWatcher之后，设置EditText的Text。</div><div class="line">            ((EditTextItemHolder) holder).et_text.setText(bean.getValue());</div><div class="line"></div><div class="line">        </div><div class="line">            TextWatcher watcher = new TextWatcher() &#123;</div><div class="line">                @Override</div><div class="line">                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) &#123;</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                @Override</div><div class="line">                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) &#123;</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                @Override</div><div class="line">                public void afterTextChanged(Editable editable) &#123;</div><div class="line">                    if (TextUtils.isEmpty(editable.toString())) &#123;</div><div class="line">                        bean.setValue(&quot;&quot;);</div><div class="line">                    &#125; else &#123;</div><div class="line">                        bean.setValue(editable.toString());</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;;</div><div class="line">            ((EditTextItemHolder) holder).et_text.addTextChangedListener(watcher);</div><div class="line">            ((EditTextItemHolder) holder).et_text.setTag(watcher);</div><div class="line">        &#125;</div></pre></td></tr></table></figure>
-<p><em>自此也算顺利解决了这个问题，博友们有好的实现方式还请分享【笑脸】</em></p>
+            <h4 id="android开发中常常会碰到开发环境与生产环境接口地址使用不同域名的情况、甚至要求debug包与release包不同包名，其实这些都可以通过gradle来帮我们完成，再也不用手动改代码，拒绝麻烦与出错，了解gralde的用法，有助于提升生产力。这里仅记录自己开发中碰到的问题及解决方式"><a href="#android开发中常常会碰到开发环境与生产环境接口地址使用不同域名的情况、甚至要求debug包与release包不同包名，其实这些都可以通过gradle来帮我们完成，再也不用手动改代码，拒绝麻烦与出错，了解gralde的用法，有助于提升生产力。这里仅记录自己开发中碰到的问题及解决方式" class="headerlink" title="android开发中常常会碰到开发环境与生产环境接口地址使用不同域名的情况、甚至要求debug包与release包不同包名，其实这些都可以通过gradle来帮我们完成，再也不用手动改代码，拒绝麻烦与出错，了解gralde的用法，有助于提升生产力。这里仅记录自己开发中碰到的问题及解决方式"></a><em>android开发中常常会碰到开发环境与生产环境接口地址使用不同域名的情况、甚至要求debug包与release包不同包名，其实这些都可以通过gradle来帮我们完成，再也不用手动改代码，拒绝麻烦与出错，了解gralde的用法，有助于提升生产力。这里仅记录自己开发中碰到的问题及解决方式</em></h4><h4 id="结合使用场景与实际操作"><a href="#结合使用场景与实际操作" class="headerlink" title="结合使用场景与实际操作"></a>结合使用场景与实际操作</h4><ul>
+<li>动态改变接口地址</li>
+<li>release与debug版本不同包名</li>
+<li>debug使用release版本正式签名</li>
+<li>apk打包自动命名   </li>
+</ul>
+<blockquote>
+<h4 id="一、比如release版本要求api域名为：https-www-release-而debug版本为：https-www-test-。我们这里介绍的是通过在Manifest文件中添加变量，同时在gradle中打包时动态的去更改属性的值，应用启动的时候去读取从而动态的改变当前版本的域名"><a href="#一、比如release版本要求api域名为：https-www-release-而debug版本为：https-www-test-。我们这里介绍的是通过在Manifest文件中添加变量，同时在gradle中打包时动态的去更改属性的值，应用启动的时候去读取从而动态的改变当前版本的域名" class="headerlink" title="一、比如release版本要求api域名为：https://www.release.\*,而debug版本为：https://www.test.\*。我们这里介绍的是通过在Manifest文件中添加变量，同时在gradle中打包时动态的去更改属性的值，应用启动的时候去读取从而动态的改变当前版本的域名"></a>一、比如release版本要求api域名为：<a href="https://www.release.\*,而debug版本为：https://www.test.\*。" target="_blank" rel="external">https://www.release.\*,而debug版本为：https://www.test.\*。</a><br>我们这里介绍的是通过在Manifest文件中添加变量，同时在gradle中打包时动态的去更改属性的值，应用启动的时候去读取从而动态的改变当前版本的域名</h4></blockquote>
+<ol>
+<li><p>通过gradle修改AndroidManifest.xm meta-data值 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;!--AndroidManifest.xml--&gt;</div><div class="line">&lt;!--编译时域名动态切换--&gt;</div><div class="line">&lt;application&gt;</div><div class="line">&lt;meta-data android:value=&quot;$&#123;app_version_key&#125;&quot;</div><div class="line">    android:name=&quot;app_version&quot;/&gt;...&lt;/application&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p>app下的gradle中使用manifestPlaceholders来动态替换属性值，格式如下;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">release &#123;</div><div class="line">       manifestPlaceholders = [</div><div class="line">               app_version_key: &quot;release&quot;</div><div class="line">       ]</div><div class="line">   &#125;</div><div class="line">debug &#123;</div><div class="line">       manifestPlaceholders = [</div><div class="line">               app_version_key: &quot;test&quot;</div><div class="line">       ]</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>3.由于清单文件中我们的meta-data节点写在application节点根目录下，这里我们在application中去获取该属性的值(其他方式请自行google)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">try &#123;</div><div class="line">         ApplicationInfo info = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);</div><div class="line">         String host = info.metaData.getString(&quot;app_version&quot;);</div><div class="line">         if (host.equals(&quot;test&quot;)) &#123;//测试版</div><div class="line">             HttpApis.host = &quot;https://www.release.*&quot;;</div><div class="line">         &#125; else &#123;//正式版</div><div class="line">             HttpApis.host = &quot;https://www.test.*&quot;;</div><div class="line">         &#125;</div><div class="line">     &#125; catch (PackageManager.NameNotFoundException e) &#123;</div><div class="line">         e.printStackTrace();</div><div class="line">     &#125;</div></pre></td></tr></table></figure></p>
+<p>通过上述操作我们已经可以实现打包时，release包与debug包域名分开。上述同样可用在第三方sdk如极光推送、测试版与正式版分开推送，可使用manifestPlaceholders 动态的改变对应的属性值</p>
+<blockquote>
+<h4 id="二、有时候为了测试方便，我们常将正式版与测试版分两个包名打包，从而实现同台手机可以同时安装、拒绝不断的安装卸载操作"><a href="#二、有时候为了测试方便，我们常将正式版与测试版分两个包名打包，从而实现同台手机可以同时安装、拒绝不断的安装卸载操作" class="headerlink" title="二、有时候为了测试方便，我们常将正式版与测试版分两个包名打包，从而实现同台手机可以同时安装、拒绝不断的安装卸载操作"></a>二、有时候为了测试方便，我们常将正式版与测试版分两个包名打包，从而实现同台手机可以同时安装、拒绝不断的安装卸载操作</h4></blockquote>
+<p>1、修改app下的gradle文件,需要注意的一点是在配置了productFlavors后，defaultConfig中的applicationId便会失效<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">android&#123;</div><div class="line">   defaultConfig &#123;</div><div class="line">       //applicationId &quot;com.david.smarthome&quot;</div><div class="line">       ...</div><div class="line">       flavorDimensions &quot;versionCode&quot;</div><div class="line"></div><div class="line">   &#125;</div><div class="line">   productFlavors &#123;</div><div class="line">       appdebug &#123;</div><div class="line">           applicationId &apos;com.david.smarthome_test&apos;</div><div class="line">       &#125;</div><div class="line">       apprelease &#123;</div><div class="line">           applicationId &apos;com.david.smarthome&apos;</div><div class="line">       &#125;</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>2、Android Studio会自动根据build.gradle 生成对应的BuildVariants。<br><img src="http://o930uobjh.bkt.clouddn.com/QQ20171227-161534.png" alt="image">  </p>
+<p>对应Release与Debug即可组合成2*2 个版本的包。使用图形界面安装时可以通过Build Variants选择当前要build到手机的版本   </p>
+<p>3、Signed Apk时同样有2*2种维度的不同版本可供打包<br><img src="http://o930uobjh.bkt.clouddn.com/QQ20171227-162120.png" alt="image">  </p>
+<p>自此我们已经完成多包名打包的配置</p>
+<blockquote>
+<h4 id="三、由于Android-Studio-打Debug包时默认使用-签名为Debug版本，即：debug-keystore-而当我们接入的第三方SDK如微信等要求提交Release版本的签名（release-jks）。这个时候最方便的方式便是让打Debug包的时候直接使用我们正式版的签名"><a href="#三、由于Android-Studio-打Debug包时默认使用-签名为Debug版本，即：debug-keystore-而当我们接入的第三方SDK如微信等要求提交Release版本的签名（release-jks）。这个时候最方便的方式便是让打Debug包的时候直接使用我们正式版的签名" class="headerlink" title="三、由于Android Studio 打Debug包时默认使用 签名为Debug版本，即：debug.keystore,而当我们接入的第三方SDK如微信等要求提交Release版本的签名（release.jks）。这个时候最方便的方式便是让打Debug包的时候直接使用我们正式版的签名"></a>三、由于Android Studio 打Debug包时默认使用 签名为Debug版本，即：debug.keystore,而当我们接入的第三方SDK如微信等要求提交Release版本的签名（release.jks）。这个时候最方便的方式便是让打Debug包的时候直接使用我们正式版的签名</h4></blockquote>
+<p>修改app.gradle,添加signingConfigs，同时在debug中指向该签名文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">android &#123;</div><div class="line">    signingConfigs &#123;</div><div class="line">        signconfig &#123;</div><div class="line">            keyAlias &apos;smarthome&apos;</div><div class="line">            keyPassword &apos;123123&apos;</div><div class="line">            storeFile file(&apos;/Users/david/AndroidStudioProjects/SmartHome/smarthome.jks&apos;)</div><div class="line">            storePassword &apos;123123</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">      debug &#123;</div><div class="line">            ...</div><div class="line">            signingConfig signingConfigs.signconfig</div><div class="line">     </div><div class="line">        &#125;</div><div class="line">&#125;    </div><div class="line">```  </div><div class="line">以上两部即可实现我们的效果，Debug包已经使用的是我们正式版的签名文件   </div><div class="line"></div><div class="line">&gt; #### 四、定义打包命名规则，结合时间日期，免去手动重命名易错，没规律的问题</div></pre></td></tr></table></figure></p>
+<p>def releaseTime() {<br>    return new Date().format(“yyyy-MM-dd”, TimeZone.getTimeZone(“UTC”))<br>}<br>android{<br>     applicationVariants.all { variant -&gt;<br>        if (variant.buildType.name.equals(‘release’)) {<br>            variant.outputs.all { output -&gt;<br>                def buildName = “com.david.smarthome”<br>                def type = variant.buildType.name<br>                def releaseApkName = buildName + ‘<em>‘ + type + “</em>“ + versionName + ‘<em>‘ + releaseTime() + ‘.apk’<br>                outputFileName = releaseApkName<br>            }<br>        } else {<br>            variant.outputs.all { output -&gt;<br>                def buildName = “com.david.smarthome”<br>                def releaseApkName = buildName + ‘</em>‘ + “test” + “<em>“ + versionName + ‘</em>‘ + releaseTime() + ‘.apk’<br>                outputFileName = releaseApkName<br>            }<br>        }<br>    }<br>}<br>```</p>
 
         
         </div>
@@ -306,7 +321,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 
             
     
-        <a href="http://hwzhang.top/2017/03/21/RecyclerView-multiple-item-type/#comments" class="article-comment-link ds-thread-count" data-thread-key="http://hwzhang.top/2017/03/21/RecyclerView-multiple-item-type/">评论</a>
+        <a href="http://hwzhang.top/2017/12/27/gradle3-0多渠道打包/#comments" class="article-comment-link ds-thread-count" data-thread-key="http://hwzhang.top/2017/12/27/gradle3-0多渠道打包/">评论</a>
     
 
         </footer>
@@ -315,19 +330,10 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
 <nav id="article-nav">
     
-        <a href="/2017/03/21/SlidingMenu/" id="article-nav-newer" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">上一篇</strong>
-            <div class="article-nav-title">
-                
-                    android studio 下使用SlidingMenu侧滑菜单
-                
-            </div>
-        </a>
     
-    
-        <a href="/2016/09/13/wifi-dev/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2017/03/22/RecyclerView系列之一：基础使用介绍/" id="article-nav-older" class="article-nav-link-wrap">
             <strong class="article-nav-caption">下一篇</strong>
-            <div class="article-nav-title">android Wifi 相关</div>
+            <div class="article-nav-title">RecyclerView系列之一：基础使用介绍</div>
         </a>
     
 </nav>
@@ -341,7 +347,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <section id="comments">
     
         
-    <div class="ds-thread" data-thread-key="2017/03/21/RecyclerView-multiple-item-type/" data-title="RecyclerView 多布局，Item中使用EditText刷新问题扫坑" data-url="http://hwzhang.top/2017/03/21/RecyclerView-multiple-item-type/"></div>
+    <div class="ds-thread" data-thread-key="2017/12/27/gradle3-0多渠道打包/" data-title="gradle3.0多渠道打包" data-url="http://hwzhang.top/2017/12/27/gradle3-0多渠道打包/"></div>
     <style>
         #ds-thread #ds-reset .ds-textarea-wrapper {
             background: none;
